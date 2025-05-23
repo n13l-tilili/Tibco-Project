@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>OUTIL TIBCO MARSEILLE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg: #121212;
+      --sidebar: #1e1e1e;
+      --text: #eeeeee;
+      --primary: #4fc3f7;
+      --highlight: #00e676;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+    }
+
+    aside {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100vh;
+      background-color: var(--sidebar);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transform: translateX(0);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    aside.closed {
+      transform: translateX(-100%);
+    }
+
+    .menu-btn {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 15px;
+      text-align: left;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s ease, padding-left 0.2s ease;
+    }
+
+    .menu-btn:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--primary);
+      padding-left: 18px;
+    }
+
+    .submenu {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      padding-left: 18px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .submenu.open {
+      display: flex;
+    }
+
+    .submenu a {
+      text-decoration: none;
+      color: var(--primary);
+      font-size: 14px;
+    }
+
+    .submenu a:hover {
+      color: white;
+    }
+
+    #catalogueBtn {
+      margin-top: 30px;
+      margin-top: 30px;
+      background-color: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      font-weight: bold;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #catalogueBtn:hover {
+      background-color: rgba(79, 195, 247, 0.1);
+    }
+
+    #catalogueBtn.active {
+      background: linear-gradient(to right, var(--primary), var(--highlight));
+      color: black;
+      box-shadow: 0 0 10px var(--highlight);
+    }
+
+    #toggle {
+      position: absolute;
+      top: 18px;
+      right: -38px;
+      width: 36px;
+      height: 36px;
+      background-color: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      font-weight: bold;
+      font-size: 16px;
+      border-radius: 0 8px 8px 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 8px rgba(79,195,247,0.4);
+    }
+
+    #toggle:hover {
+      background-color: rgba(79, 195, 247, 0.15);
+      color: white;
+      border-color: white;
+    }
+
+    main {
+      margin-left: 270px;
+      padding: 40px;
+      transition: margin-left 0.3s ease;
+    }
+
+    aside.closed ~ main {
+      margin-left: 40px;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(-5px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  
+.sidebar-title {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  color: var(--primary);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 6px;
+}
+</style>
+</head>
+<body>
+  <aside id="sidebar">
+    <div class="sidebar-title">Outils Tibco Marseille</div>
+    <button id="toggle" onclick="toggleSidebar()">☰</button>
+
+    <button class="menu-btn" onclick="toggleMenu('mail')">📨 Générateur de mail</button>
+    <div class="submenu" id="menu-mail">
+      <a href="#">📦 Expédition : INTER CTI</a>
+      <a href="#">🔧 Expédition : COORD PMU</a>
+      <a href="#">📋 Suspensions Journalier</a>
+    </div>
+
+    <button class="menu-btn" onclick="toggleMenu('outils')">🧰 Outils</button>
+    <div class="submenu" id="menu-outils">
+      <a href="#">📘 Procédure</a>
+      <a href="#">📦 Scan Conso PMU</a>
+    </div>
+
+    <button class="menu-btn" onclick="toggleMenu('planning')">📅 Planning</button>
+    <div class="submenu" id="menu-planning">
+      <a href="#">👷 Techniciens PMU</a>
+    </div>
+
+    <button id="catalogueBtn" onclick="toggleCatalogue()">📂 Catalogue PMU</button>
+  </aside>
+
+  <main>
+    <section style="max-width: 800px; margin: 0 auto;">
+      <h1 style="font-size: 24px; color: var(--primary); margin-bottom: 10px;">Bienvenue sur l'Outil Tibco Marseille</h1>
+      <p style="font-size: 16px; color: #ccc; line-height: 1.6;">
+        Cet outil a été conçu pour centraliser tous les accès aux services opérationnels de Tibco Marseille.
+        Vous y trouverez les générateurs de mails, les procédures clients, les outils de gestion PMU, le planning des techniciens, ainsi qu’un accès direct au catalogue des pièces.
+      </p>
+      <p style="font-size: 16px; color: #ccc; line-height: 1.6;">
+        Utilisez le menu latéral pour naviguer dans les différentes sections. Le bouton ☰ vous permet d’afficher ou masquer le menu selon vos besoins.
+      </p>
+    </section>
+    
+  </main>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.classList.toggle("closed");
+    }
+
+    function toggleMenu(id) {
+      const el = document.getElementById("menu-" + id);
+      el.classList.toggle("open");
+    }
+
+    function toggleCatalogue() {
+      const btn = document.getElementById("catalogueBtn");
+      btn.classList.toggle("active");
+    }
+  </script>
+</body>
+</html>
