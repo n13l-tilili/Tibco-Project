@@ -27,7 +27,7 @@
       width: 250px;
       height: 100vh;
       background-color: var(--sidebar);
-      padding: 20px;
+      padding: 16px 20px;
       display: flex;
       flex-direction: column;
       gap: 14px;
@@ -153,6 +153,151 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   padding-bottom: 6px;
 }
+<style>
+    body {
+      background-color: #121212;
+      color: #e0f7fa;
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 40px;
+    }
+    h1 {
+      text-align: center;
+      color: #4fc3f7;
+      font-size: 28px;
+      margin-bottom: 40px;
+    }
+    .search-bar {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .search-bar input {
+      padding: 14px 20px;
+      width: 60%;
+      max-width: 500px;
+      border-radius: 8px;
+      border: none;
+      background-color: #1f1f1f;
+      color: white;
+      font-size: 16px;
+      box-shadow: 0 0 6px rgba(79, 195, 247, 0.3);
+      outline: none;
+    }
+    .table-wrapper {
+      max-height: 340px;
+      overflow-y: auto;
+      border-radius: 12px;
+      box-shadow: inset 0 0 6px rgba(79,195,247,0.3);
+    }
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background-color: #1a1a1a;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(79, 195, 247, 0.15);
+    }
+    th, td {
+      padding: 14px 12px;
+      text-align: left;
+    }
+    thead {
+      background-color: #222;
+      color: #4fc3f7;
+    }
+    tbody tr {
+      transition: background 0.2s ease-in-out;
+      border-top: 1px solid #2b2b2b;
+    }
+    tbody tr:hover {
+      background-color: #2a2a2a;
+    }
+    tbody td {
+      color: #eeeeee;
+      font-size: 14px;
+    }
+    button {
+      background-color: #1f1f1f;
+      border: 1px solid #4fc3f7;
+      color: #4fc3f7;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      font-size: 13px;
+    }
+    button:hover {
+      background-color: #4fc3f7;
+      color: #121212;
+      box-shadow: 0 0 6px #4fc3f7;
+    }
+  </style>
+
+<style>
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(6px);
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .modal-content {
+    width: 680px;
+    padding: 16px 20px;
+    max-height: 400px;
+    background-color: #1f1f1f;
+    width: 850px;
+    max-width: 60%;
+    border-radius: 16px;
+    padding: 24px;
+    margin: 5% auto;
+    box-shadow: 0 0 20px rgba(79,195,247,0.6);
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .close-btn {
+    color: #f44336;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    right: 20px;
+    top: -10px;
+    cursor: pointer;
+    z-index: 10001;
+  }
+
+  .modal input[type="text"] {
+    display: block;
+    margin: 20px auto;
+    width: 60%;
+    padding: 10px 16px;
+    margin: 10px 0 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #2c2c2c;
+    color: white;
+    box-shadow: 0 0 8px rgba(79, 195, 247, 0.3);
+  }
+
+  .modal input[type="text"]::placeholder {
+    color: #bbb;
+  }
+</style>
+
 </style>
 </head>
 <body>
@@ -196,7 +341,16 @@
   </main>
 
   <script>
-    function toggleSidebar() {
+    
+if (!sessionStorage.getItem("loggedIn")) {
+  window.location.href = "login.html";
+}
+function toggleCatalogue() {
+  const modal = document.getElementById("catalogueModal");
+  modal.style.display = modal.style.display === "block" ? "none" : "block";
+}
+
+function toggleSidebar() {
       const sidebar = document.getElementById("sidebar");
       sidebar.classList.toggle("closed");
     }
@@ -206,10 +360,362 @@
       el.classList.toggle("open");
     }
 
-    function toggleCatalogue() {
-      const btn = document.getElementById("catalogueBtn");
-      btn.classList.toggle("active");
-    }
+    
   </script>
+
+<!-- MODALE FINALE avec 5 lignes visibles, toutes chargées -->
+<div id="catalogueModal" class="modal">
+  <div class="modal-content" style="width: 850px; max-width: 60%; background-color: #1f1f1f; border-radius: 16px; padding: 24px; margin: 5% auto; box-shadow: 0 0 20px rgba(79,195,247,0.6); position: relative;">
+    <span class="close-btn" onclick="toggleCatalogue()" style="color: #f44336; font-size: 28px; font-weight: bold; position: absolute; right: 16px; top: 10px; cursor: pointer;">&times;</span>
+    
+<div style="text-align:center; margin-bottom: 15px;">
+  <input id="searchInput" onkeyup="filterCatalogue()" placeholder="🔍 Rechercher une référence ou un matériel..." type="text"/>
+</div>
+<table class="catalogue-table">
+<thead>
+<tr><th>Type</th><th>Constructeur</th><th>Ref</th><th>Matériel</th><th>Copier</th></tr>
+</thead>
+<tbody>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.01</td><td>IDEMIA-UNITE CENTRALE</td><td><button onclick="copy('PMU-BID.0001.01', 'IDEMIA-UNITE CENTRALE')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.02</td><td>IDEMIA-SCANNER</td><td><button onclick="copy('PMU-BID.0001.02', 'IDEMIA-SCANNER')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.03</td><td>IDEMIA-ECRAN OPERATEUR</td><td><button onclick="copy('PMU-BID.0001.03', 'IDEMIA-ECRAN OPERATEUR')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.04</td><td>IDEMIA-MODULE MONETIQUE</td><td><button onclick="copy('PMU-BID.0001.04', 'IDEMIA-MODULE MONETIQUE')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.05</td><td>IDEMIA-ACCEPTEUR DE BILLETS</td><td><button onclick="copy('PMU-BID.0001.05', 'IDEMIA-ACCEPTEUR DE BILLETS')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.06</td><td>IDEMIA-ACCEPTEUR DE PIECES</td><td><button onclick="copy('PMU-BID.0001.06', 'IDEMIA-ACCEPTEUR DE PIECES')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.07</td><td>IDEMIA-IMPRIMANTE</td><td><button onclick="copy('PMU-BID.0001.07', 'IDEMIA-IMPRIMANTE')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.38</td><td>IDEMIA-ECRAN OPERATEUR NEXT GENE</td><td><button onclick="copy('PMU-BID.0001.38', 'IDEMIA-ECRAN OPERATEUR NEXT GENE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.01</td><td>PMC-ALIMENTATION STAR 2060 A/A</td><td><button onclick="copy('PMU-BPM.0001.01', 'PMC-ALIMENTATION STAR 2060 A/A')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.02</td><td>PMC-LECTEUR SCANNER</td><td><button onclick="copy('PMU-BPM.0001.02', 'PMC-LECTEUR SCANNER')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.03</td><td>PMC-CONFIG. ITRC STAR 2060</td><td><button onclick="copy('PMU-BPM.0001.03', 'PMC-CONFIG. ITRC STAR 2060')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.04</td><td>PMC-ECRAN PREPOSE 2060</td><td><button onclick="copy('PMU-BPM.0001.04', 'PMC-ECRAN PREPOSE 2060')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.05</td><td>PMC-ECRAN PREPOSE 2061</td><td><button onclick="copy('PMU-BPM.0001.05', 'PMC-ECRAN PREPOSE 2061')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.06</td><td>PMC-ECRAN PREPOSE 2062</td><td><button onclick="copy('PMU-BPM.0001.06', 'PMC-ECRAN PREPOSE 2062')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.07</td><td>PMC-ALARME STAR 2060</td><td><button onclick="copy('PMU-BPM.0001.07', 'PMC-ALARME STAR 2060')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.08</td><td>PMC-ACCEPTEUR DE PIECES NRI</td><td><button onclick="copy('PMU-BPM.0001.08', 'PMC-ACCEPTEUR DE PIECES NRI')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.09</td><td>PMC-ACCEPTEUR DE PIECES COMESTERO</td><td><button onclick="copy('PMU-BPM.0001.09', 'PMC-ACCEPTEUR DE PIECES COMESTERO')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.10</td><td>PMC-CHAUSSETTE</td><td><button onclick="copy('PMU-BPM.0001.10', 'PMC-CHAUSSETTE')">Copier</button></td></tr>
+<tr><td>borne</td><td>PMC</td><td>PMU-BPM.0001.100</td><td>PMC-IMP SANEI D39 160 FAV STAR 2070</td><td><button onclick="copy('PMU-BPM.0001.100', 'PMC-IMP SANEI D39 160 FAV STAR 2070')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.100</td><td>PMC-IMP SANEI D39 160 FAV STAR 2070</td><td><button onclick="copy('PMU-BPM.0001.100', 'PMC-IMP SANEI D39 160 FAV STAR 2070')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.101</td><td>PMC-ACCEPTEUR DE PIECES COLIBRI</td><td><button onclick="copy('PMU-BPM.0001.101', 'PMC-ACCEPTEUR DE PIECES COLIBRI')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.102</td><td>PMC-ACCEPTEUR DE BILLETS POUR BORNE 2070</td><td><button onclick="copy('PMU-BPM.0001.102', 'PMC-ACCEPTEUR DE BILLETS POUR BORNE 2070')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.103</td><td>PMC-CAISSE A BILLETS POUR BORNE 2070</td><td><button onclick="copy('PMU-BPM.0001.103', 'PMC-CAISSE A BILLETS POUR BORNE 2070')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.104</td><td>PMC-LECTEUR NFC MIFARE</td><td><button onclick="copy('PMU-BPM.0001.104', 'PMC-LECTEUR NFC MIFARE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.105</td><td>PMC-DONGLE USB 4G</td><td><button onclick="copy('PMU-BPM.0001.105', 'PMC-DONGLE USB 4G')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.106</td><td>PMC-EQUIP MODULE WIFI STAR2070 PMU</td><td><button onclick="copy('PMU-BPM.0001.106', 'PMC-EQUIP MODULE WIFI STAR2070 PMU')">Copier</button></td></tr>
+<tr><td>borne</td><td>PAX</td><td>PMU-BPM.0001.107</td><td>PMC-PAX-PINPAD PAX QV25</td><td><button onclick="copy('PMU-BPM.0001.107', 'PMC-PAX-PINPAD PAX QV25')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.11</td><td>PMC-BOITE A PIECES</td><td><button onclick="copy('PMU-BPM.0001.11', 'PMC-BOITE A PIECES')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.12</td><td>PMC-ACCEPTEUR DE BILLETS</td><td><button onclick="copy('PMU-BPM.0001.12', 'PMC-ACCEPTEUR DE BILLETS')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.13</td><td>PMC-SUPPORT JCM</td><td><button onclick="copy('PMU-BPM.0001.13', 'PMC-SUPPORT JCM')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.14</td><td>PMC-CAISSE A BILLETS</td><td><button onclick="copy('PMU-BPM.0001.14', 'PMC-CAISSE A BILLETS')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.17</td><td>PMC-ENSEMBLE BAC UC 2060</td><td><button onclick="copy('PMU-BPM.0001.17', 'PMC-ENSEMBLE BAC UC 2060')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.18</td><td>PMC-ENSEMBLE BAC UC 2061</td><td><button onclick="copy('PMU-BPM.0001.18', 'PMC-ENSEMBLE BAC UC 2061')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.19</td><td>PMC-ENSEMBLE BAC UC 2062</td><td><button onclick="copy('PMU-BPM.0001.19', 'PMC-ENSEMBLE BAC UC 2062')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.68</td><td>ECRAN PREPOSE SEUL</td><td><button onclick="copy('PMU-BPM.0001.68', 'ECRAN PREPOSE SEUL')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.79</td><td>PMC-IMPRIMANTE SANEI pour bornes 2062+</td><td><button onclick="copy('PMU-BPM.0001.79', 'PMC-IMPRIMANTE SANEI pour bornes 2062+')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.81</td><td>PMC-TOLE LONGUE MONETIQ IPP350 2060/2061</td><td><button onclick="copy('PMU-BPM.0001.81', 'PMC-TOLE LONGUE MONETIQ IPP350 2060/2061')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.82</td><td>PMC-TOLE COURTE MONETIQUE PMR IPP350 2061 v3 / 2062 - 2062+</td><td><button onclick="copy('PMU-BPM.0001.82', 'PMC-TOLE COURTE MONETIQUE PMR IPP350 2061 v3 / 2062 - 2062+')">Copier</button></td></tr>
+<tr><td>borne</td><td>PMC</td><td>PMU-BPM.0001.87</td><td>PMC-ECRAN PREPOSE 2060/2061 sans LSC</td><td><button onclick="copy('PMU-BPM.0001.87', 'PMC-ECRAN PREPOSE 2060/2061 sans LSC')">Copier</button></td></tr>
+<tr><td>borne</td><td>PMC</td><td>PMU-BPM.0001.88</td><td>INGENICO-TPE IPP350</td><td><button onclick="copy('PMU-BPM.0001.88', 'INGENICO-TPE IPP350')">Copier</button></td></tr>
+<tr><td>borne</td><td>PMC</td><td>PMU-BPM.0001.96</td><td>PMC-BAC UC STAR 2070</td><td><button onclick="copy('PMU-BPM.0001.96', 'PMC-BAC UC STAR 2070')">Copier</button></td></tr>
+<tr><td>borne</td><td>PMC</td><td>PMU-BPM.0001.97</td><td>PMC-MODULE ALIMENTATION STAR 2070</td><td><button onclick="copy('PMU-BPM.0001.97', 'PMC-MODULE ALIMENTATION STAR 2070')">Copier</button></td></tr>
+<tr><td>borne</td><td>PMC</td><td>PMU-BPM.0001.98</td><td>PMC-ECRAN BRN 2070 INNOLUX</td><td><button onclick="copy('PMU-BPM.0001.98', 'PMC-ECRAN BRN 2070 INNOLUX')">Copier</button></td></tr>
+<tr><td>borne</td><td>PMC</td><td>PMU-BPM.0001.99</td><td>PMC-LECTEUR CODE BARRE</td><td><button onclick="copy('PMU-BPM.0001.99', 'PMC-LECTEUR CODE BARRE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pax</td><td>PMU-EQT.1500.01</td><td>PAX-PINPAD PAX S300</td><td><button onclick="copy('PMU-EQT.1500.01', 'PAX-PINPAD PAX S300')">Copier</button></td></tr>
+<tr><td>eipdv</td><td>aures</td><td>PMU-EQT.2000.01</td><td>AURES-EIPDV V1</td><td><button onclick="copy('PMU-EQT.2000.01', 'AURES-EIPDV V1')">Copier</button></td></tr>
+<tr><td>eipdv</td><td>HEXAGLOBE</td><td>PMU-EQT.2002.01</td><td>HEXAGLOBE-BOITIER OTT</td><td><button onclick="copy('PMU-EQT.2002.01', 'HEXAGLOBE-BOITIER OTT')">Copier</button></td></tr>
+<tr><td>eipdv</td><td>HEXAGLOBE</td><td>PMU-EQT.2002.02</td><td>HEXAGLOBE-BOITIER OTT v2</td><td><button onclick="copy('PMU-EQT.2002.02', 'HEXAGLOBE-BOITIER OTT v2')">Copier</button></td></tr>
+<tr><td>moniteur tv</td><td>samsung</td><td>PMU-EQT.2015.01</td><td>SAMSUNG-MONITEUR DM32E</td><td><button onclick="copy('PMU-EQT.2015.01', 'SAMSUNG-MONITEUR DM32E')">Copier</button></td></tr>
+<tr><td>eipdv</td><td>aures</td><td>PMU-EQT.2200.01</td><td>AURES-EIPDV V2</td><td><button onclick="copy('PMU-EQT.2200.01', 'AURES-EIPDV V2')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-EQT.3700.01</td><td>SAGEM-TERMINAL S8</td><td><button onclick="copy('PMU-EQT.3700.01', 'SAGEM-TERMINAL S8')">Copier</button></td></tr>
+<tr><td>borne</td><td>PMC</td><td>PMU-EQT.4200.01</td><td>PMC-BORNE 2070</td><td><button onclick="copy('PMU-EQT.4200.01', 'PMC-BORNE 2070')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-TID.0000.01</td><td>IDEMIA-CAISSON TERMINAL S8</td><td><button onclick="copy('PMU-TID.0000.01', 'IDEMIA-CAISSON TERMINAL S8')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-TID.0001.01</td><td>IDEMIA-MODULE OPTIQUE TERMINAL IDEMIA</td><td><button onclick="copy('PMU-TID.0001.01', 'IDEMIA-MODULE OPTIQUE TERMINAL IDEMIA')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-TID.0001.02</td><td>IDEMIA-IMPRIMANTE TERMINAL IDEMIA</td><td><button onclick="copy('PMU-TID.0001.02', 'IDEMIA-IMPRIMANTE TERMINAL IDEMIA')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-TID.0001.03</td><td>IDEMIA-ECRAN PREPOSE TERMINAL IDEMIA</td><td><button onclick="copy('PMU-TID.0001.03', 'IDEMIA-ECRAN PREPOSE TERMINAL IDEMIA')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-TID.0001.04</td><td>IDEMIA-ECRAN CLIENT TERMINAL IDEMIA</td><td><button onclick="copy('PMU-TID.0001.04', 'IDEMIA-ECRAN CLIENT TERMINAL IDEMIA')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-TID.0002.01</td><td>IDEMIA-UNITE CENTRALE S8</td><td><button onclick="copy('PMU-TID.0002.01', 'IDEMIA-UNITE CENTRALE S8')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-TID.0002.02</td><td>IDEMIA-SCANNER S8</td><td><button onclick="copy('PMU-TID.0002.02', 'IDEMIA-SCANNER S8')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-TID.0002.03</td><td>IDEMIA-IMPRIMANTE S8</td><td><button onclick="copy('PMU-TID.0002.03', 'IDEMIA-IMPRIMANTE S8')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-TID.0002.04</td><td>IDEMIA-ECRAN OPERATEUR S8</td><td><button onclick="copy('PMU-TID.0002.04', 'IDEMIA-ECRAN OPERATEUR S8')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-TID.0002.05</td><td>IDEMIA-ECRAN JOUEUR S8</td><td><button onclick="copy('PMU-TID.0002.05', 'IDEMIA-ECRAN JOUEUR S8')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-TID.0002.06</td><td>IDEMIA-ALIMENTATION S8</td><td><button onclick="copy('PMU-TID.0002.06', 'IDEMIA-ALIMENTATION S8')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0001.01</td><td>PMC-MODULE CLIENT TERMINAL PMC</td><td><button onclick="copy('PMU-TPM.0001.01', 'PMC-MODULE CLIENT TERMINAL PMC')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0001.02</td><td>PMC-ECRAN TERMINAL PMC</td><td><button onclick="copy('PMU-TPM.0001.02', 'PMC-ECRAN TERMINAL PMC')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0001.03</td><td>PMC-LECTEUR PAR CAMERA TERMINAL PMC</td><td><button onclick="copy('PMU-TPM.0001.03', 'PMC-LECTEUR PAR CAMERA TERMINAL PMC')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0001.04</td><td>PMC-ALIMENTATION TERMINAL PMC</td><td><button onclick="copy('PMU-TPM.0001.04', 'PMC-ALIMENTATION TERMINAL PMC')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0001.05</td><td>PMC-IMPRIMANTE TERMINAL PMC</td><td><button onclick="copy('PMU-TPM.0001.05', 'PMC-IMPRIMANTE TERMINAL PMC')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0001.06</td><td>PMC-BAC UC TERMINAL PMC</td><td><button onclick="copy('PMU-TPM.0001.06', 'PMC-BAC UC TERMINAL PMC')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0002.00</td><td>PMC-CAISSON TERMINAL STAR 2020</td><td><button onclick="copy('PMU-TPM.0002.00', 'PMC-CAISSON TERMINAL STAR 2020')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0002.01</td><td>PMC-AFFICHEUR CLIENT 2020</td><td><button onclick="copy('PMU-TPM.0002.01', 'PMC-AFFICHEUR CLIENT 2020')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0002.02</td><td>PMC-ALIMENTATION 2020</td><td><button onclick="copy('PMU-TPM.0002.02', 'PMC-ALIMENTATION 2020')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0002.03</td><td>PMC-BAC UNITE CENTRALE 2020</td><td><button onclick="copy('PMU-TPM.0002.03', 'PMC-BAC UNITE CENTRALE 2020')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0002.04</td><td>PMC-ECRAN TITULAIRE 2020</td><td><button onclick="copy('PMU-TPM.0002.04', 'PMC-ECRAN TITULAIRE 2020')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0002.05</td><td>PMC-IMPRIMANTE 2020</td><td><button onclick="copy('PMU-TPM.0002.05', 'PMC-IMPRIMANTE 2020')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0002.06</td><td>PMC-LECTEUR 2020</td><td><button onclick="copy('PMU-TPM.0002.06', 'PMC-LECTEUR 2020')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-EQT.4200.01</td><td>PMC-BORNE 2070</td><td><button onclick="copy('PMU-EQT.4200.01', 'PMC-BORNE 2070')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.08</td><td>IDEMIA-CORDON LEDS ETAT BORNE</td><td><button onclick="copy('PMU-BID.0001.08', 'IDEMIA-CORDON LEDS ETAT BORNE')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.09</td><td>IDEMIA-CORDON RS232 CM - BILLETS JCM</td><td><button onclick="copy('PMU-BID.0001.09', 'IDEMIA-CORDON RS232 CM - BILLETS JCM')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.10</td><td>IDEMIA-CORDON USB 1-B MONNAYEUR</td><td><button onclick="copy('PMU-BID.0001.10', 'IDEMIA-CORDON USB 1-B MONNAYEUR')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.11</td><td>IDEMIA-CORDON ALIM BILLETS JCM</td><td><button onclick="copy('PMU-BID.0001.11', 'IDEMIA-CORDON ALIM BILLETS JCM')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.12</td><td>IDEMIA-CORDON ALIM MONNAYEUR</td><td><button onclick="copy('PMU-BID.0001.12', 'IDEMIA-CORDON ALIM MONNAYEUR')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.13</td><td>IDEMIA-CORDON ECRAN OPERATEUR</td><td><button onclick="copy('PMU-BID.0001.13', 'IDEMIA-CORDON ECRAN OPERATEUR')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.14</td><td>IDEMIA-CORDON MDR26 SCANNER/UC</td><td><button onclick="copy('PMU-BID.0001.14', 'IDEMIA-CORDON MDR26 SCANNER/UC')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.15</td><td>IDEMIA-CORDON RJ48 +24V 1.5M</td><td><button onclick="copy('PMU-BID.0001.15', 'IDEMIA-CORDON RJ48 +24V 1.5M')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.16</td><td>IDEMIA-CORDON RJ45 BORNE</td><td><button onclick="copy('PMU-BID.0001.16', 'IDEMIA-CORDON RJ45 BORNE')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.17</td><td>IDEMIA-CORDON SECTEUR</td><td><button onclick="copy('PMU-BID.0001.17', 'IDEMIA-CORDON SECTEUR')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.18</td><td>IDEMIA-CORDON ALIM 24V MONETIQUE</td><td><button onclick="copy('PMU-BID.0001.18', 'IDEMIA-CORDON ALIM 24V MONETIQUE')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.19</td><td>IDEMIA-CORDON USB TYPE B</td><td><button onclick="copy('PMU-BID.0001.19', 'IDEMIA-CORDON USB TYPE B')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.20</td><td>IDEMIA-MULTIPRISE</td><td><button onclick="copy('PMU-BID.0001.20', 'IDEMIA-MULTIPRISE')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.21</td><td>IDEMIA-POIGNEE</td><td><button onclick="copy('PMU-BID.0001.21', 'IDEMIA-POIGNEE')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.22</td><td>IDEMIA-SERRURE PRINCIPALE (CLES ROUGES)</td><td><button onclick="copy('PMU-BID.0001.22', 'IDEMIA-SERRURE PRINCIPALE (CLES ROUGES)')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.23</td><td>IDEMIA-VERIN</td><td><button onclick="copy('PMU-BID.0001.23', 'IDEMIA-VERIN')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.24</td><td>IDEMIA-BOUCHE SCANNER</td><td><button onclick="copy('PMU-BID.0001.24', 'IDEMIA-BOUCHE SCANNER')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.25</td><td>IDEMIA-GUIDE TICKET IMPRIMANTE</td><td><button onclick="copy('PMU-BID.0001.25', 'IDEMIA-GUIDE TICKET IMPRIMANTE')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.26</td><td>IDEMIA-SEQUESTRE PIECES + SERRURE (CLES VERTE)</td><td><button onclick="copy('PMU-BID.0001.26', 'IDEMIA-SEQUESTRE PIECES + SERRURE (CLES VERTE)')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.27</td><td>IDEMIA-CHARNIERE</td><td><button onclick="copy('PMU-BID.0001.27', 'IDEMIA-CHARNIERE')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.28</td><td>IDEMIA-AIMANT</td><td><button onclick="copy('PMU-BID.0001.28', 'IDEMIA-AIMANT')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.29</td><td>IDEMIA-CAPTEUR PORTE</td><td><button onclick="copy('PMU-BID.0001.29', 'IDEMIA-CAPTEUR PORTE')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.30</td><td>IDEMIA-TRINGLE D'OUVERTURE</td><td><button onclick="copy('PMU-BID.0001.30', 'IDEMIA-TRINGLE D'OUVERTURE')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.31</td><td>IDEMIA-SEQUESTRE TICKET</td><td><button onclick="copy('PMU-BID.0001.31', 'IDEMIA-SEQUESTRE TICKET')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.32</td><td>IDEMIA-BOUTON MOLETTE SCAN/IMP/UC</td><td><button onclick="copy('PMU-BID.0001.32', 'IDEMIA-BOUTON MOLETTE SCAN/IMP/UC')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.33</td><td>IDEMIA-ECROU ECRAN / MONETIQUE</td><td><button onclick="copy('PMU-BID.0001.33', 'IDEMIA-ECROU ECRAN / MONETIQUE')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.34</td><td>IDEMIA-CLE PASSE-PARTOUT BORNEO</td><td><button onclick="copy('PMU-BID.0001.34', 'IDEMIA-CLE PASSE-PARTOUT BORNEO')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.35</td><td>IDEMIA-TRESSE DE MASSE BORNEO</td><td><button onclick="copy('PMU-BID.0001.35', 'IDEMIA-TRESSE DE MASSE BORNEO')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.36</td><td>IDEMIA-VIS AIMANTS BUTEES PORTE PRINCIPALE</td><td><button onclick="copy('PMU-BID.0001.36', 'IDEMIA-VIS AIMANTS BUTEES PORTE PRINCIPALE')">Copier</button></td></tr>
+<tr><td>borne</td><td>Idemia</td><td>PMU-BID.0001.37</td><td>IDEMIA-SEQUESTRE PIECES</td><td><button onclick="copy('PMU-BID.0001.37', 'IDEMIA-SEQUESTRE PIECES')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.38</td><td>IDEMIA-ECRAN OPERATEUR NEXT GENE</td><td><button onclick="copy('PMU-BID.0001.38', 'IDEMIA-ECRAN OPERATEUR NEXT GENE')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.39</td><td>TOLE INTEGRATION PINPAD PAX</td><td><button onclick="copy('PMU-BID.0001.39', 'TOLE INTEGRATION PINPAD PAX')">Copier</button></td></tr>
+<tr><td>borne</td><td>IDEMIA</td><td>PMU-BID.0001.40</td><td>IDEMIA-Kit Maintenance - Technicien</td><td><button onclick="copy('PMU-BID.0001.40', 'IDEMIA-Kit Maintenance - Technicien')">Copier</button></td></tr>
+<tr><td>borne</td><td>idemia</td><td>PMU-BID.0001.41</td><td>IDEMIA-Ecrou frein</td><td><button onclick="copy('PMU-BID.0001.41', 'IDEMIA-Ecrou frein')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.10</td><td>PMC-CHAUSSETTE</td><td><button onclick="copy('PMU-BPM.0001.10', 'PMC-CHAUSSETTE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.11</td><td>PMC-BOITE A PIECES</td><td><button onclick="copy('PMU-BPM.0001.11', 'PMC-BOITE A PIECES')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.13</td><td>PMC-SUPPORT JCM</td><td><button onclick="copy('PMU-BPM.0001.13', 'PMC-SUPPORT JCM')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.15</td><td>PMC-PORTE PRINCIPALE COMPLETE</td><td><button onclick="copy('PMU-BPM.0001.15', 'PMC-PORTE PRINCIPALE COMPLETE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.16</td><td>PMC-KIT PORTE MONETIQUE BASSE</td><td><button onclick="copy('PMU-BPM.0001.16', 'PMC-KIT PORTE MONETIQUE BASSE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.23</td><td>PMC-Support Kit CB IPP350</td><td><button onclick="copy('PMU-BPM.0001.23', 'PMC-Support Kit CB IPP350')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.24</td><td>PMC-Liaison Kit CB IPP350</td><td><button onclick="copy('PMU-BPM.0001.24', 'PMC-Liaison Kit CB IPP350')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.25</td><td>PMC-PALIER DROIT ECRAN NOIR</td><td><button onclick="copy('PMU-BPM.0001.25', 'PMC-PALIER DROIT ECRAN NOIR')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.26</td><td>PMC-PALIER GAUCHE ECRAN NOIR</td><td><button onclick="copy('PMU-BPM.0001.26', 'PMC-PALIER GAUCHE ECRAN NOIR')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.27</td><td>PMC-BOUTON BORNE</td><td><button onclick="copy('PMU-BPM.0001.27', 'PMC-BOUTON BORNE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.28</td><td>PMC-SOCLE BORNE</td><td><button onclick="copy('PMU-BPM.0001.28', 'PMC-SOCLE BORNE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.29</td><td>PMC-PORTE HTE MONETIQ PMR</td><td><button onclick="copy('PMU-BPM.0001.29', 'PMC-PORTE HTE MONETIQ PMR')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.30</td><td>PMC-BAC SEQUESTRE V1</td><td><button onclick="copy('PMU-BPM.0001.30', 'PMC-BAC SEQUESTRE V1')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.31</td><td>PMC-BAC SEQUESTRE V2</td><td><button onclick="copy('PMU-BPM.0001.31', 'PMC-BAC SEQUESTRE V2')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.32</td><td>PMC-PORTE MONETIQUE HAUTE</td><td><button onclick="copy('PMU-BPM.0001.32', 'PMC-PORTE MONETIQUE HAUTE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.33</td><td>PMC-PORTE SOCLE STAR2060</td><td><button onclick="copy('PMU-BPM.0001.33', 'PMC-PORTE SOCLE STAR2060')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.34</td><td>PMC-Col de cygne droit porte monétique haute</td><td><button onclick="copy('PMU-BPM.0001.34', 'PMC-Col de cygne droit porte monétique haute')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.35</td><td>PMC-Col de cygne gauche porte monétique haute</td><td><button onclick="copy('PMU-BPM.0001.35', 'PMC-Col de cygne gauche porte monétique haute')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.36</td><td>PMC-CACHE VUE PORTE MONETIQUE</td><td><button onclick="copy('PMU-BPM.0001.36', 'PMC-CACHE VUE PORTE MONETIQUE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.37</td><td>PMC-SEBILE</td><td><button onclick="copy('PMU-BPM.0001.37', 'PMC-SEBILE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.38</td><td>PMC-COL DE CYGNE PORTE MONETIQUE</td><td><button onclick="copy('PMU-BPM.0001.38', 'PMC-COL DE CYGNE PORTE MONETIQUE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.39</td><td>PMC-COL DE CYGNE ECRAN GAUCHE STAR2061</td><td><button onclick="copy('PMU-BPM.0001.39', 'PMC-COL DE CYGNE ECRAN GAUCHE STAR2061')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.40</td><td>PMC-COL DE CYGNE ECRAN DROIT STAR2061</td><td><button onclick="copy('PMU-BPM.0001.40', 'PMC-COL DE CYGNE ECRAN DROIT STAR2061')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.41</td><td>PMC-SERRURE</td><td><button onclick="copy('PMU-BPM.0001.41', 'PMC-SERRURE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.42</td><td>PMC-GLISSIERE TELESCOPIQUE</td><td><button onclick="copy('PMU-BPM.0001.42', 'PMC-GLISSIERE TELESCOPIQUE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.43</td><td>PMC-VERIN ECRAN</td><td><button onclick="copy('PMU-BPM.0001.43', 'PMC-VERIN ECRAN')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.44</td><td>PMC-VERIN PORTE MONETIQUE</td><td><button onclick="copy('PMU-BPM.0001.44', 'PMC-VERIN PORTE MONETIQUE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.45</td><td>PMC-CLE PASSE-PARTOUT STAR 2060</td><td><button onclick="copy('PMU-BPM.0001.45', 'PMC-CLE PASSE-PARTOUT STAR 2060')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.46</td><td>PMC-FIL DE TERRE ECRAN</td><td><button onclick="copy('PMU-BPM.0001.46', 'PMC-FIL DE TERRE ECRAN')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.47</td><td>PMC-FIL DE TERRE A/B</td><td><button onclick="copy('PMU-BPM.0001.47', 'PMC-FIL DE TERRE A/B')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.48</td><td>PMC-LIAISON JCM A/A</td><td><button onclick="copy('PMU-BPM.0001.48', 'PMC-LIAISON JCM A/A')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.49</td><td>PMC-REP BANDEAU SECTEUR</td><td><button onclick="copy('PMU-BPM.0001.49', 'PMC-REP BANDEAU SECTEUR')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.50</td><td>PMC-SWITCH DETECTION PORTE</td><td><button onclick="copy('PMU-BPM.0001.50', 'PMC-SWITCH DETECTION PORTE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.51</td><td>PMC-LIAISON ETHERNET A/A</td><td><button onclick="copy('PMU-BPM.0001.51', 'PMC-LIAISON ETHERNET A/A')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.52</td><td>PMC-LIAISON BUC-CAB2 A/A</td><td><button onclick="copy('PMU-BPM.0001.52', 'PMC-LIAISON BUC-CAB2 A/A')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.53</td><td>PMC-LIAISON ALIM-CAB2 A/A</td><td><button onclick="copy('PMU-BPM.0001.53', 'PMC-LIAISON ALIM-CAB2 A/A')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.54</td><td>PMC-LIAISON SWITCH -CAB 2A/A</td><td><button onclick="copy('PMU-BPM.0001.54', 'PMC-LIAISON SWITCH -CAB 2A/A')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.55</td><td>PMC-LIAISON SWITCH MONETIQUE</td><td><button onclick="copy('PMU-BPM.0001.55', 'PMC-LIAISON SWITCH MONETIQUE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.56</td><td>PMC-LIAISON USB G13/ BAC UC</td><td><button onclick="copy('PMU-BPM.0001.56', 'PMC-LIAISON USB G13/ BAC UC')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.57</td><td>PMC-LI. ALIMENTATION G13 A/A</td><td><button onclick="copy('PMU-BPM.0001.57', 'PMC-LI. ALIMENTATION G13 A/A')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.58</td><td>PMC-LIAISON ALIMENTATION G13</td><td><button onclick="copy('PMU-BPM.0001.58', 'PMC-LIAISON ALIMENTATION G13')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.59</td><td>PMC-LIAISON BUC - JCM A/A</td><td><button onclick="copy('PMU-BPM.0001.59', 'PMC-LIAISON BUC - JCM A/A')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.60</td><td>PMC-CORDON SECTEUR "droit"</td><td><button droit"')"="" onclick="copy('PMU-BPM.0001.60', 'PMC-CORDON SECTEUR ">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.61</td><td>PMC-LIAISON SWITCH -CAB 2A/A 2</td><td><button onclick="copy('PMU-BPM.0001.61', 'PMC-LIAISON SWITCH -CAB 2A/A 2')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.62</td><td>PMC-REP BANDEAU SECTEUR 2</td><td><button onclick="copy('PMU-BPM.0001.62', 'PMC-REP BANDEAU SECTEUR 2')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.63</td><td>PMC-LIAISON SWITCH MONETIQUE 2</td><td><button onclick="copy('PMU-BPM.0001.63', 'PMC-LIAISON SWITCH MONETIQUE 2')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.64</td><td>PMC-LI BUC-USB RM A/A</td><td><button onclick="copy('PMU-BPM.0001.64', 'PMC-LI BUC-USB RM A/A')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.65</td><td>PMC-LI BUC-ALIM RM5 A/A</td><td><button onclick="copy('PMU-BPM.0001.65', 'PMC-LI BUC-ALIM RM5 A/A')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.66</td><td>PMC-FILTRE SECTEUR</td><td><button onclick="copy('PMU-BPM.0001.66', 'PMC-FILTRE SECTEUR')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.67</td><td>PMC-CORDON SECTEUR (COURT 1M) "coudé"</td><td><button coudé"')"="" onclick="copy('PMU-BPM.0001.67', 'PMC-CORDON SECTEUR (COURT 1M) ">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.68</td><td>PMC-LIAISON BUC-CAB2 A/A 2</td><td><button onclick="copy('PMU-BPM.0001.68', 'PMC-LIAISON BUC-CAB2 A/A 2')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.70</td><td>PMC-ALIMENTATION KIT CB I9500</td><td><button onclick="copy('PMU-BPM.0001.70', 'PMC-ALIMENTATION KIT CB I9500')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.71</td><td>PMC-KIT VISSERIE BORNE</td><td><button onclick="copy('PMU-BPM.0001.71', 'PMC-KIT VISSERIE BORNE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.72</td><td>PMC-SUPPORT LECTEUR BORNE 206X</td><td><button onclick="copy('PMU-BPM.0001.72', 'PMC-SUPPORT LECTEUR BORNE 206X')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.73</td><td>PMC-SUPPORT ACCEPTEUR PIECE NRI</td><td><button onclick="copy('PMU-BPM.0001.73', 'PMC-SUPPORT ACCEPTEUR PIECE NRI')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.74</td><td>PMC-SUPPORT ACCEPTEUR PIECE COMESTERO</td><td><button onclick="copy('PMU-BPM.0001.74', 'PMC-SUPPORT ACCEPTEUR PIECE COMESTERO')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.75</td><td>PMC-PLAQUE SUPPORT ACCEPTEUR PIECE RAL7040</td><td><button onclick="copy('PMU-BPM.0001.75', 'PMC-PLAQUE SUPPORT ACCEPTEUR PIECE RAL7040')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.76</td><td>PATTES GAUCHE+DROITE VERROULLAGE MONETIQUE</td><td><button onclick="copy('PMU-BPM.0001.76', 'PATTES GAUCHE+DROITE VERROULLAGE MONETIQUE')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.79</td><td>PMC-IMPRIMANTE SANEI pour bornes 2062+</td><td><button onclick="copy('PMU-BPM.0001.79', 'PMC-IMPRIMANTE SANEI pour bornes 2062+')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.80</td><td>PMC-Câbles lecteurs sans contact vending pass Ecran borne</td><td><button onclick="copy('PMU-BPM.0001.80', 'PMC-Câbles lecteurs sans contact vending pass Ecran borne')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.81</td><td>PMC-TOLE LONGUE MONETIQ IPP350 2060/2061</td><td><button onclick="copy('PMU-BPM.0001.81', 'PMC-TOLE LONGUE MONETIQ IPP350 2060/2061')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.82</td><td>PMC-TOLE COURTE MONETIQUE PMR IPP350 2061 v3 / 2062 - 2062+</td><td><button onclick="copy('PMU-BPM.0001.82', 'PMC-TOLE COURTE MONETIQUE PMR IPP350 2061 v3 / 2062 - 2062+')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.83</td><td>PMC-TOLE LONGUE MONETIQ KIT I95</td><td><button onclick="copy('PMU-BPM.0001.83', 'PMC-TOLE LONGUE MONETIQ KIT I95')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-BPM.0001.84</td><td>PORTE HTE MONETIQ PMR PAX S300</td><td><button onclick="copy('PMU-BPM.0001.84', 'PORTE HTE MONETIQ PMR PAX S300')">Copier</button></td></tr>
+<tr><td>borne</td><td>PMC</td><td>PMU-BPM.0001.90</td><td>PMC-CAISSON BLOCAGE BUC</td><td><button onclick="copy('PMU-BPM.0001.90', 'PMC-CAISSON BLOCAGE BUC')">Copier</button></td></tr>
+<tr><td>borne</td><td>PMC</td><td>PMU-BPM.0001.91</td><td>PMC-BRIDE FAV IMP</td><td><button onclick="copy('PMU-BPM.0001.91', 'PMC-BRIDE FAV IMP')">Copier</button></td></tr>
+<tr><td>borne</td><td>PMC</td><td>PMU-BPM.0001.93</td><td>SUPPORT CABLE IMP2020 TEINTE</td><td><button onclick="copy('PMU-BPM.0001.93', 'SUPPORT CABLE IMP2020 TEINTE')">Copier</button></td></tr>
+<tr><td>borne</td><td>PMC</td><td>PMU-BPM.0001.94</td><td>PMC-BOBINE</td><td><button onclick="copy('PMU-BPM.0001.94', 'PMC-BOBINE')">Copier</button></td></tr>
+<tr><td>borne</td><td>PMC</td><td>PMU-BPM.0001.95</td><td>PMC-TICKETS DE JEUX</td><td><button onclick="copy('PMU-BPM.0001.95', 'PMC-TICKETS DE JEUX')">Copier</button></td></tr>
+<tr><td>borne</td><td>PMC</td><td>PMU-BPM.0001.109</td><td>PMC-CABLE RESEAU</td><td><button onclick="copy('PMU-BPM.0001.109', 'PMC-CABLE RESEAU')">Copier</button></td></tr>
+<tr><td>borne</td><td>pmc</td><td>PMU-CAB.0001.01</td><td>PMU-DISJONCTEUR MAGNETO THERMIQUE</td><td><button onclick="copy('PMU-CAB.0001.01', 'PMU-DISJONCTEUR MAGNETO THERMIQUE')">Copier</button></td></tr>
+<tr><td>cablage</td><td>PMU</td><td>PMU-CAB.0001.02</td><td>PMU-INTERRUPTEUR DIFFERENTIEL</td><td><button onclick="copy('PMU-CAB.0001.02', 'PMU-INTERRUPTEUR DIFFERENTIEL')">Copier</button></td></tr>
+<tr><td>cablage</td><td>PMU</td><td>PMU-CAB.0001.03</td><td>PMU-LIMITEUR DE SURTENSION</td><td><button onclick="copy('PMU-CAB.0001.03', 'PMU-LIMITEUR DE SURTENSION')">Copier</button></td></tr>
+<tr><td>cablage</td><td>PMU</td><td>PMU-CAB.0001.04</td><td>PMU-REBOOT ROUTEUR</td><td><button onclick="copy('PMU-CAB.0001.04', 'PMU-REBOOT ROUTEUR')">Copier</button></td></tr>
+<tr><td>cablage</td><td>PMU</td><td>PMU-CAB.0001.05</td><td>PMU-PAIRE DE LIVEPLUG CPL</td><td><button onclick="copy('PMU-CAB.0001.05', 'PMU-PAIRE DE LIVEPLUG CPL')">Copier</button></td></tr>
+<tr><td>cablage</td><td>PMU</td><td>PMU-CAB.0001.06</td><td>PMU-INSERT RJ45</td><td><button onclick="copy('PMU-CAB.0001.06', 'PMU-INSERT RJ45')">Copier</button></td></tr>
+<tr><td>cablage</td><td>PMU</td><td>PMU-CAB.0001.07</td><td>PMU-TP_LINK</td><td><button onclick="copy('PMU-CAB.0001.07', 'PMU-TP_LINK')">Copier</button></td></tr>
+<tr><td>cablage</td><td>PMU</td><td>PMU-CAB.0001.08</td><td>A CREER dénomination</td><td><button onclick="copy('PMU-CAB.0001.08', 'A CREER dénomination')">Copier</button></td></tr>
+<tr><td>eipdv</td><td>aures</td><td>PMU-EIP.0001.01</td><td>EIPDV-ANTENNE WIFI</td><td><button onclick="copy('PMU-EIP.0001.01', 'EIPDV-ANTENNE WIFI')">Copier</button></td></tr>
+<tr><td>eipdv</td><td>aures</td><td>PMU-EIP.0001.02</td><td>EIPDV-HDD PMU</td><td><button onclick="copy('PMU-EIP.0001.02', 'EIPDV-HDD PMU')">Copier</button></td></tr>
+<tr><td>eipdv</td><td>aures</td><td>PMU-EIP.0001.03</td><td>EIPDV-ALIMENTATION</td><td><button onclick="copy('PMU-EIP.0001.03', 'EIPDV-ALIMENTATION')">Copier</button></td></tr>
+<tr><td>eipdv</td><td>AURES</td><td>PMU-EIP.0001.04</td><td>BAC UC EIPDV V2</td><td><button onclick="copy('PMU-EIP.0001.04', 'BAC UC EIPDV V2')">Copier</button></td></tr>
+<tr><td>eipdv</td><td>AURES</td><td>PMU-EIP.0001.05</td><td>EIPDV V2 ALIMENTATION</td><td><button onclick="copy('PMU-EIP.0001.05', 'EIPDV V2 ALIMENTATION')">Copier</button></td></tr>
+<tr><td>eipdv</td><td>AURES</td><td>PMU-EIP.0001.06</td><td>OTT - CÂBLE ALIMENTATION MICRO USB</td><td><button onclick="copy('PMU-EIP.0001.06', 'OTT - CÂBLE ALIMENTATION MICRO USB')">Copier</button></td></tr>
+<tr><td>eipdv</td><td>HEXAGLOBE</td><td>PMU-EQT.2002.01</td><td>HEXAGLOBE-BOITIER OTT</td><td><button onclick="copy('PMU-EQT.2002.01', 'HEXAGLOBE-BOITIER OTT')">Copier</button></td></tr>
+<tr><td>eipdv</td><td>HEXAGLOBE</td><td>PMU-EQT.2002.02</td><td>HEXAGLOBE-BOITIER OTT v2</td><td><button onclick="copy('PMU-EQT.2002.02', 'HEXAGLOBE-BOITIER OTT v2')">Copier</button></td></tr>
+<tr><td>eipdv</td><td>PMU</td><td>PMU-EQT.2009.01</td><td>EIPDV-SUPPORT TOTEM</td><td><button onclick="copy('PMU-EQT.2009.01', 'EIPDV-SUPPORT TOTEM')">Copier</button></td></tr>
+<tr><td>moniteur tv</td><td>samsung</td><td>PMU-EQT.2015.01</td><td>SAMSUNG-MONITEUR DM32E</td><td><button onclick="copy('PMU-EQT.2015.01', 'SAMSUNG-MONITEUR DM32E')">Copier</button></td></tr>
+<tr><td>moniteur tv</td><td>samsung</td><td>PMU-MON.0001.01</td><td>TELECOMMANDE TV SAMSUNG</td><td><button onclick="copy('PMU-MON.0001.01', 'TELECOMMANDE TV SAMSUNG')">Copier</button></td></tr>
+<tr><td>moniteur tv</td><td>samsung</td><td>PMU-MON.0001.02</td><td>PMU-CAB-ALIM-ECRAN-SAMSUNG</td><td><button onclick="copy('PMU-MON.0001.02', 'PMU-CAB-ALIM-ECRAN-SAMSUNG')">Copier</button></td></tr>
+<tr><td></td><td></td><td>PMU-PAX.0001.01</td><td>PAX- CABLE S300</td><td><button onclick="copy('PMU-PAX.0001.01', 'PAX- CABLE S300')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-TID.0001.05</td><td>IDEMIA-CABLE HDMI</td><td><button onclick="copy('PMU-TID.0001.05', 'IDEMIA-CABLE HDMI')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-TID.0001.06</td><td>IDEMIA-CABLE 24V</td><td><button onclick="copy('PMU-TID.0001.06', 'IDEMIA-CABLE 24V')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-TID.0001.07</td><td>IDEMIA-CABLE USB</td><td><button onclick="copy('PMU-TID.0001.07', 'IDEMIA-CABLE USB')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-TID.0001.08</td><td>IDEMIA-CABLE ALIMENTATION PRINCIPAL</td><td><button onclick="copy('PMU-TID.0001.08', 'IDEMIA-CABLE ALIMENTATION PRINCIPAL')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>Ancien : PMU-TID.0001.09News : PMU-BID.0001.16</td><td>IDEMIA-CABLE RJ45</td><td><button onclick="copy('Ancien : PMU-TID.0001.09News : PMU-BID.0001.16', 'IDEMIA-CABLE RJ45')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-TID.0001.10</td><td>IDEMIA-CABLE RJ48 IMPRIMANTE</td><td><button onclick="copy('PMU-TID.0001.10', 'IDEMIA-CABLE RJ48 IMPRIMANTE')">Copier</button></td></tr>
+<tr><td>terminal</td><td>idemia</td><td>PMU-TID.0001.11</td><td>IDEMIA-TRAPPE ARRIERE</td><td><button onclick="copy('PMU-TID.0001.11', 'IDEMIA-TRAPPE ARRIERE')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0001.07</td><td>PMC-CORDON SECTEUR NOIR 2.5M</td><td><button onclick="copy('PMU-TPM.0001.07', 'PMC-CORDON SECTEUR NOIR 2.5M')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0001.08</td><td>PMC-LI MODULE CLIENT STAR2031 A/A</td><td><button onclick="copy('PMU-TPM.0001.08', 'PMC-LI MODULE CLIENT STAR2031 A/A')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0001.09</td><td>PMC-CABLE POWER USB B/A</td><td><button onclick="copy('PMU-TPM.0001.09', 'PMC-CABLE POWER USB B/A')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0001.10</td><td>PMC-CAPOT MOBIL S2031 ASM TAUPE</td><td><button onclick="copy('PMU-TPM.0001.10', 'PMC-CAPOT MOBIL S2031 ASM TAUPE')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0001.11</td><td>cache recepissé imprimante</td><td><button onclick="copy('PMU-TPM.0001.11', 'cache recepissé imprimante')">Copier</button></td></tr>
+<tr><td></td><td></td><td>PMU-TPM.0001.12</td><td>PMC-Modules IHM</td><td><button onclick="copy('PMU-TPM.0001.12', 'PMC-Modules IHM')">Copier</button></td></tr>
+<tr><td>terminal</td><td>pmc</td><td>PMU-TPM.0001.12</td><td>PMC-MODULE IHM POUR TERMINAUX 2031 (BOUTON ON/OFF)</td><td><button onclick="copy('PMU-TPM.0001.12', 'PMC-MODULE IHM POUR TERMINAUX 2031 (BOUTON ON/OFF)')">Copier</button></td></tr>
+</tbody>
+</table>
+<div style="text-align: center; margin-top: 12px;">
+  <a href="catalogue_full.html" target="_blank" style="
+    background-color: #4fc3f7;
+    color: black;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 0 10px rgba(79, 195, 247, 0.4);
+  ">🔍 Voir tout le catalogue</a>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const aliasMap = {
+      "acb": "accepteur de billet",
+      "acp": "accepteur de piece",
+      "uc": "unite centrale"
+    };
+
+    function applyAlias(term) {
+      const lower = term.toLowerCase();
+      return aliasMap[lower] || term;
+    }
+
+    const input = document.querySelector('input[type="text"]');
+    const table = document.querySelector("table.catalogue-table");
+    const rows = table.querySelectorAll("tbody tr");
+
+    function resetDefaultView() {
+      rows.forEach((row, i) => {
+        row.style.display = i < 4 ? "" : "none";
+      });
+    }
+
+    input.addEventListener("input", function () {
+      const filter = applyAlias(this.value.trim()).toUpperCase();
+
+      if (filter === "") {
+        resetDefaultView();
+        return;
+      }
+
+      rows.forEach(row => {
+        const cells = row.querySelectorAll("td");
+        const match = Array.from(cells).some(cell =>
+          (cell.textContent || "").toUpperCase().includes(filter)
+        );
+        row.style.display = match ? "" : "none";
+      });
+    });
+
+    resetDefaultView();
+  });
+</script>
+
+
+  </div>
+</div>
+
+
+
+<script>
+  function copy(ref, designation) {
+    const text = ref + "\t" + designation;
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Copié: " + text);
+    }).catch(err => {
+      alert("Erreur lors de la copie : " + err);
+    });
+  }
+</script>
+
+
+<div id="notif" style="
+  display: none;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #4fc3f7;
+  color: #000;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(79,195,247,0.4);
+  z-index: 99999;
+  transition: opacity 0.3s ease;
+">📋 Copié !</div>
+
+
+<script>
+  function copy(ref, designation) {
+    const text = ref + "\t" + designation;
+    navigator.clipboard.writeText(text).then(() => {
+      const notif = document.getElementById("notif");
+      notif.style.display = "block";
+      notif.style.opacity = "1";
+      setTimeout(() => {
+        notif.style.opacity = "0";
+        setTimeout(() => notif.style.display = "none", 300);
+      }, 1500);
+    }).catch(err => {
+      console.error("Erreur lors de la copie :", err);
+    });
+  }
+</script>
+
+
+<script>
+  function loadPage(page) {
+    fetch(page)
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById("main-content").innerHTML = html;
+      })
+      .catch(error => {
+        document.getElementById("main-content").innerHTML = "<p style='color:red;'>Erreur de chargement</p>";
+        console.error(error);
+      });
+  }
+</script>
 </body>
+
 </html>
