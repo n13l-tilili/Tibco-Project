@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>OUTIL TIBCO MARSEILLE</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
+<meta charset="utf-8"/>
+<title>OUTIL TIBCO MARSEILLE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<style>
     :root {
       --bg: #121212;
       --sidebar: #1e1e1e;
@@ -232,8 +233,15 @@
       color: #121212;
       box-shadow: 0 0 6px #4fc3f7;
     }
-  </style>
-
+  
+#welcomeMessage.fade-in {
+  animation: fadeIn 0.8s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
 <style>
   .modal {
     display: none;
@@ -297,69 +305,51 @@
     color: #bbb;
   }
 </style>
-
-</style>
 </head>
 <body>
-  <aside id="sidebar">
-    <div class="sidebar-title">Outils Tibco Marseille</div>
-    <button id="toggle" onclick="toggleSidebar()">☰</button>
-
-    <button class="menu-btn" onclick="toggleMenu('mail')">📨 Générateur de mail</button>
-    <div class="submenu" id="menu-mail">
-      <a href="#" onclick="showSection('iframe-cti')">📦 Expédition : INTER CTI</a>
-      <a href="#" onclick="showSection('iframe-coord')">🔧 Expédition : COORD PMU</a>
-      <a href="#" onclick="showSection('iframe-susp')">📋 Suspensions Journalier</a>
-    </div>
-
-    <button class="menu-btn" onclick="toggleMenu('outils')">🧰 Outils</button>
-    <div class="submenu" id="menu-outils">
-      <a href="#" onclick="showSection('iframe-proc')">📘 Procédure</a>
-      <a href="#" onclick="showSection('iframe-scan')">📦 Scan Conso PMU</a>
-    </div>
-
-    <button class="menu-btn" onclick="toggleMenu('planning')">📅 Planning</button>
-    <div class="submenu" id="menu-planning">
-      <a href="#">👷 Techniciens PMU</a>
-    </div>
-
-    <button id="catalogueBtn" onclick="toggleCatalogue()">📂 Catalogue PMU</button>
-  </aside>
-
-  <main>
-
-<div id="welcome" class="page-section" style="display:block;">
-  <section style="max-width: 800px; margin: 0 auto;">
-    <h1 style="font-size: 24px; color: var(--primary); margin-bottom: 10px;">Bienvenue sur l'Outil Tibco Marseille</h1>
-    <p style="font-size: 16px; color: #ccc; line-height: 1.6;">
-      Cet outil a été conçu pour centraliser tous les accès aux services opérationnels de Tibco Marseille.
-      Vous y trouverez les générateurs de mails, les procédures clients, les outils de gestion PMU, le planning des techniciens, ainsi qu’un accès direct au catalogue des pièces.
-    </p>
-    <p style="font-size: 16px; color: #ccc; line-height: 1.6;">
-      Utilisez le menu latéral pour naviguer dans les différentes sections. Le bouton ☰ vous permet d’afficher ou masquer le menu selon vos besoins.
-    </p>
-  </section>
+<div class="fade-in" id="welcomeMessage" style="margin-left: 310px; margin-right: 30px; margin-top: 30px; padding: 20px; text-align: center; max-width: calc(100% - 380px); border-radius: 12px; background: #161b22; box-shadow: 0 0 15px #58a6ffaa; position: relative; color: #c9d1d9; transition: margin 0.3s ease, opacity 0.5s ease;">
+<div id="clock" style="position:absolute;top:10px;left:20px;color:#58a6ff;font-size:16px;font-weight:bold;text-shadow:0 0 5px #58a6ff;">🕒</div>
+<button id="editWelcome" style="position:absolute;top:10px;right:20px;background:none;border:none;color:#58a6ff;font-size:18px;cursor:pointer;" title="Modifier">✏️</button>
+<div id="welcomeContent">
+<h2 style="color:#58a6ff;">Bienvenue sur l'Outil Tibco Marseille</h2>
+<p>Utilisez le menu à gauche pour naviguer dans les différentes sections.<br/>
+    Le bouton ☰ permet d’ouvrir ou fermer le menu.<br/>
+    Tous les outils internes Tibco sont regroupés ici : mails, procédures, pièces, etc.</p>
 </div>
-<iframe id="iframe-cti" class="page-section" src="cti.html" style="display:none; width:100%; height:700px; border:none;"></iframe>
-<iframe id="iframe-coord" class="page-section" src="coord.html" style="display:none; width:100%; height:700px; border:none;"></iframe>
-<iframe id="iframe-susp" class="page-section" src="suspensions.html" style="display:none; width:100%; height:700px; border:none;"></iframe>
-<iframe id="iframe-proc" class="page-section" src="procedure.html" style="display:none; width:100%; height:700px; border:none;"></iframe>
-<iframe id="iframe-scan" class="page-section" src="scan_conso.html" style="display:none; width:100%; height:700px; border:none;"></iframe>
-
-    <section style="max-width: 800px; margin: 0 auto;">
-      <h1 style="font-size: 24px; color: var(--primary); margin-bottom: 10px;">Bienvenue sur l'Outil Tibco Marseille</h1>
-      <p style="font-size: 16px; color: #ccc; line-height: 1.6;">
-        Cet outil a été conçu pour centraliser tous les accès aux services opérationnels de Tibco Marseille.
-        Vous y trouverez les générateurs de mails, les procédures clients, les outils de gestion PMU, le planning des techniciens, ainsi qu’un accès direct au catalogue des pièces.
-      </p>
-      <p style="font-size: 16px; color: #ccc; line-height: 1.6;">
-        Utilisez le menu latéral pour naviguer dans les différentes sections. Le bouton ☰ vous permet d’afficher ou masquer le menu selon vos besoins.
-      </p>
-    </section>
-    
-  </main>
-
-  <script>
+<div id="editForm" style="display:none;margin-top:10px;">
+<textarea id="welcomeEditor" rows="6" style="width:100%;padding:10px;background:#0d1117;border:1px solid #58a6ff;color:#fff;border-radius:8px;"></textarea>
+<input id="imgURL" placeholder="URL d'une image (facultatif)" style="margin-top:10px;width:100%;padding:10px;border-radius:8px;border:1px solid #58a6ff;background:#0d1117;color:#fff;" type="text"/>
+<button onclick="saveWelcome()" style="margin-top:10px;padding:8px 16px;border-radius:20px;border:none;background:#58a6ff;color:#0d1117;font-weight:bold;cursor:pointer;">✅ Sauvegarder</button>
+</div>
+</div>
+<aside id="sidebar">
+<div class="sidebar-title">Outils Tibco Marseille</div>
+<button id="toggle" onclick="toggleSidebar()">☰</button>
+<button class="menu-btn" onclick="toggleMenu('mail')">📨 Générateur de mail</button>
+<div class="submenu" id="menu-mail">
+<a href="#" onclick="showSection('iframe-cti')">📦 Expédition : INTER CTI</a>
+<a href="#" onclick="showSection('iframe-coord')">🔧 Expédition : COORD PMU</a>
+<a href="#" onclick="showSection('iframe-susp')">📋 Suspensions Journalier</a>
+</div>
+<button class="menu-btn" onclick="toggleMenu('outils')">🧰 Outils</button>
+<div class="submenu" id="menu-outils">
+<a href="#" onclick="showSection('iframe-proc')">📘 Procédure</a>
+<a href="#" onclick="showSection('iframe-scan')">📦 Scan Conso PMU</a>
+</div>
+<button class="menu-btn" onclick="toggleMenu('planning')">📅 Planning</button>
+<div class="submenu" id="menu-planning">
+<a href="#">👷 Techniciens PMU</a>
+</div>
+<button id="catalogueBtn" onclick="toggleCatalogue()">📂 Catalogue PMU</button>
+</aside>
+<main>
+<iframe class="page-section" id="iframe-cti" src="cti.html" style="display:none; width:100%; height:700px; border:none;"></iframe>
+<iframe class="page-section" id="iframe-coord" src="coord.html" style="display:none; width:100%; height:700px; border:none;"></iframe>
+<iframe class="page-section" id="iframe-susp" src="suspensions.html" style="display:none; width:100%; height:700px; border:none;"></iframe>
+<iframe class="page-section" id="iframe-proc" src="procedure.html" style="display:none; width:100%; height:700px; border:none;"></iframe>
+<iframe class="page-section" id="iframe-scan" src="scan_conso.html" style="display:none; width:100%; height:700px; border:none;"></iframe>
+</main>
+<script>
     
 if (!sessionStorage.getItem("loggedIn")) {
   window.location.href = "login.html";
@@ -389,14 +379,12 @@ function toggleMenu(id) {
 
     
   </script>
-
 <!-- MODALE FINALE avec 5 lignes visibles, toutes chargées -->
-<div id="catalogueModal" class="modal">
-  <div class="modal-content" style="width: 850px; max-width: 60%; background-color: #1f1f1f; border-radius: 16px; padding: 24px; margin: 5% auto; box-shadow: 0 0 20px rgba(79,195,247,0.6); position: relative;">
-    <span class="close-btn" onclick="toggleCatalogue()" style="color: #f44336; font-size: 28px; font-weight: bold; position: absolute; right: 16px; top: 10px; cursor: pointer;">&times;</span>
-    
+<div class="modal" id="catalogueModal">
+<div class="modal-content" style="width: 850px; max-width: 60%; background-color: #1f1f1f; border-radius: 16px; padding: 24px; margin: 5% auto; box-shadow: 0 0 20px rgba(79,195,247,0.6); position: relative;">
+<span class="close-btn" onclick="toggleCatalogue()" style="color: #f44336; font-size: 28px; font-weight: bold; position: absolute; right: 16px; top: 10px; cursor: pointer;">×</span>
 <div style="text-align:center; margin-bottom: 15px;">
-  <input id="searchInput" onkeyup="filterCatalogue()" placeholder="🔍 Rechercher une référence ou un matériel..." type="text"/>
+<input id="searchInput" onkeyup="filterCatalogue()" placeholder="🔍 Rechercher une référence ou un matériel..." type="text"/>
 </div>
 <table class="catalogue-table">
 <thead>
@@ -622,7 +610,7 @@ function toggleMenu(id) {
 </tbody>
 </table>
 <div style="text-align: center; margin-top: 12px;">
-  <a href="catalogue_full.html" target="_blank" style="
+<a href="catalogue_full.html" style="
     background-color: #4fc3f7;
     color: black;
     padding: 8px 16px;
@@ -631,9 +619,8 @@ function toggleMenu(id) {
     text-decoration: none;
     display: inline-block;
     box-shadow: 0 0 10px rgba(79, 195, 247, 0.4);
-  ">🔍 Voir tout le catalogue</a>
+  " target="_blank">🔍 Voir tout le catalogue</a>
 </div>
-
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const aliasMap = {
@@ -677,13 +664,8 @@ function toggleMenu(id) {
     resetDefaultView();
   });
 </script>
-
-
-  </div>
 </div>
-
-
-
+</div>
 <script>
   function copy(ref, designation) {
     const text = ref + "\t" + designation;
@@ -694,8 +676,6 @@ function toggleMenu(id) {
     });
   }
 </script>
-
-
 <div id="notif" style="
   display: none;
   position: fixed;
@@ -710,8 +690,6 @@ function toggleMenu(id) {
   z-index: 99999;
   transition: opacity 0.3s ease;
 ">📋 Copié !</div>
-
-
 <script>
   function copy(ref, designation) {
     const text = ref + "\t" + designation;
@@ -728,6 +706,134 @@ function toggleMenu(id) {
     });
   }
 </script>
+<script>
+function updateClock() {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  document.getElementById('clock').textContent = "🕒 " + timeStr;
+}
+setInterval(updateClock, 1000);
+document.addEventListener('DOMContentLoaded', () => {
+  updateClock();
 
-</body>
+  if (window !== window.parent) {
+    document.getElementById('welcomeMessage').style.display = 'none';
+  }
+
+  const saved = localStorage.getItem('customWelcome');
+  const img = localStorage.getItem('customImage');
+
+  if (saved) {
+    document.getElementById('welcomeContent').innerHTML = saved;
+    if (img) {
+      const image = document.createElement('img');
+      image.src = img;
+      image.style = 'margin-top:10px;max-width:100%;border-radius:10px;';
+      document.getElementById('welcomeContent').appendChild(image);
+    }
+  }
+
+  document.getElementById('editWelcome').addEventListener('click', () => {
+    const form = document.getElementById('editForm');
+    const content = document.getElementById('welcomeContent');
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    content.style.display = form.style.display === 'none' ? 'block' : 'none';
+
+    if (form.style.display === 'block') {
+      document.getElementById('welcomeEditor').value = content.innerHTML;
+    }
+  });
+});
+
+function saveWelcome() {
+  const content = document.getElementById('welcomeContent');
+  const newHTML = document.getElementById('welcomeEditor').value;
+  const imgURL = document.getElementById('imgURL').value;
+
+  localStorage.setItem('customWelcome', newHTML);
+  localStorage.setItem('customImage', imgURL);
+
+  content.innerHTML = newHTML;
+  if (imgURL.trim()) {
+    const img = document.createElement('img');
+    img.src = imgURL;
+    img.style = 'margin-top:10px;max-width:100%;border-radius:10px;';
+    content.appendChild(img);
+  }
+
+  document.getElementById('editForm').style.display = 'none';
+  content.style.display = 'block';
+}
+</script><script>
+document.addEventListener('DOMContentLoaded', () => {
+  const welcome = document.getElementById('welcomeMessage');
+  
+        const isIframe = window.self !== window.top;
+        if (isIframe) {
+            const welcome = document.getElementById('welcomeMessage');
+            if (welcome) welcome.style.display = 'none';
+            return;
+        }
+        
+    welcome.style.display = 'none';
+    return;
+  }
+
+  // animation d’apparition
+  welcome.classList.add('fade-in');
+
+  // Masquer le message si déjà présent
+  const saved = localStorage.getItem('customWelcome');
+  const img = localStorage.getItem('customImage');
+  const content = document.getElementById('welcomeContent');
+  if (saved) {
+    content.innerHTML = saved;
+    if (img) {
+      const image = document.createElement('img');
+      image.src = img;
+      image.style = 'margin-top:10px;max-width:100%;border-radius:10px;';
+      content.appendChild(image);
+    }
+  }
+
+  document.getElementById('editWelcome').addEventListener('click', () => {
+    const form = document.getElementById('editForm');
+    const content = document.getElementById('welcomeContent');
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    content.style.display = form.style.display === 'none' ? 'block' : 'none';
+
+    if (form.style.display === 'block') {
+      document.getElementById('welcomeEditor').value = content.innerHTML;
+    }
+  });
+});
+
+function saveWelcome() {
+  const content = document.getElementById('welcomeContent');
+  const newHTML = document.getElementById('welcomeEditor').value;
+  const imgURL = document.getElementById('imgURL').value;
+
+  localStorage.setItem('customWelcome', newHTML);
+  localStorage.setItem('customImage', imgURL);
+
+  content.innerHTML = newHTML;
+  if (imgURL.trim()) {
+    const img = document.createElement('img');
+    img.src = imgURL;
+    img.style = 'margin-top:10px;max-width:100%;border-radius:10px;';
+    content.appendChild(img);
+  }
+
+  document.getElementById('editForm').style.display = 'none';
+  content.style.display = 'block';
+}
+
+// Masquer le message de bienvenue lorsqu’un lien du menu latéral est cliqué
+document.querySelectorAll('.menu a, .menu button').forEach(link => {
+  link.addEventListener('click', () => {
+    const welcome = document.getElementById('welcomeMessage');
+    if (welcome) welcome.style.display = 'none';
+  });
+});
+</script></body>
 </html>
