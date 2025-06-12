@@ -118,6 +118,9 @@
 <button onclick="openModal('category')">📂 Ajouter catégorie</button>
 <button onclick="openModal('procedure')">📄 Ajouter procédure</button>
 <button onclick="exportHTML()">💾 Exporter</button>
+<button onclick="document.getElementById('jsonInput').click()">📂 Importer</button>
+<input accept=".json" id="jsonInput" onchange="importJSON(event)" style="display:none;" type="file"/>
+
 <button onclick="toggleEdit()">🛠️ Mode édition</button>
 </div>
 <button class="menu-toggle" onclick="toggleMenu()">⚙️</button>
@@ -388,5 +391,23 @@ function addProcedure() {
   closeModal();
 }
 
+</script><script>
+function importJSON(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                clients = JSON.parse(e.target.result);
+                localStorage.setItem("clientsData", JSON.stringify(clients));
+                render();
+                alert("✅ Import réussi !");
+            } catch (error) {
+                alert("❌ Erreur lors de l'import du fichier : " + error);
+            }
+        };
+        reader.readAsText(file);
+    }
+}
 </script></body>
 </html>
