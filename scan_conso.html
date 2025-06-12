@@ -1,6 +1,69 @@
-
-    <div style='padding: 30px; color: white;'>
-        <h1>📦 Scan Conso PMU</h1>
-        <p>Contenu factice pour la page <strong>scan_conso.html</strong>.</p>
-    </div>
-    
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Scan Conso PMU</title>
+  <style>
+    body { background-color: #121212; color: white; font-family: "Segoe UI", sans-serif; padding: 40px; }
+    h1 { color: #4fc3f7; }
+    input[type="text"], input[type="number"] {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #4fc3f7;
+      background-color: #1f1f1f;
+      color: white;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: #1e1e1e;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #4fc3f7;
+    }
+    th { background-color: #263238; }
+    button {
+      background-color: #1f1f1f;
+      border: 1px solid #4fc3f7;
+      color: #4fc3f7;
+      padding: 10px 20px;
+      border-radius: 8px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #4fc3f7;
+      color: #121212;
+    }
+  </style>
+</head>
+<body>
+  <h1>📦 Scan Conso PMU</h1>
+  <input type="text" id="ref" placeholder="Référence Tibco">
+  <input type="number" id="qty" placeholder="Quantité">
+  <button onclick="addItem()">Ajouter</button>
+  <table id="table">
+    <thead>
+      <tr><th>Référence</th><th>Quantité</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <script>
+    function addItem() {
+      const ref = document.getElementById("ref").value;
+      const qty = document.getElementById("qty").value;
+      if (ref && qty) {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${ref}</td><td>${qty}</td>`;
+        document.querySelector("#table tbody").appendChild(row);
+        document.getElementById("ref").value = "";
+        document.getElementById("qty").value = "";
+      }
+    }
+  </script>
+</body>
+</html>
