@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Procédures Clients</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Procédures Clients</title>
+<style>
     body { background-color: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', sans-serif; margin: 0; }
     h1 { text-align: center; color: #58a6ff; margin: 20px 0; text-shadow: 0 0 10px #58a6ff; }
     .topbar { display: flex; justify-content: space-between; padding: 10px 20px; position: relative; }
@@ -78,34 +79,72 @@
       position: absolute; top: 10px; right: 12px;
       color: red; font-weight: bold; font-size: 18px; cursor: pointer;
     }
-  </style>
+  
+/* Style des modales modernes */
+.modal-content h3 {
+  color: #58a6ff;
+  margin-bottom: 15px;
+}
+.modal-content input,
+.modal-content select {
+  margin-bottom: 12px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  background-color: #21262d;
+  color: #58a6ff;
+  border: none;
+  font-size: 15px;
+}
+.modal-content button {
+  background-color: #238636;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.modal-content button:hover {
+  background-color: #2ea043;
+}
+</style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="dropdown-menu" id="menu">
-      <button onclick="openModal('client')">➕ Ajouter client</button>
-      <button onclick="openModal('category')">📂 Ajouter catégorie</button>
-      <button onclick="openModal('procedure')">📄 Ajouter procédure</button>
-      <button onclick="exportHTML()">💾 Exporter</button>
-      <button onclick="toggleEdit()">🛠️ Mode édition</button>
-    </div>
-    <button class="menu-toggle" onclick="toggleMenu()">⚙️</button>
-  </div>
-
-  <h1>📘 Procédures par Client</h1>
-  <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="🔍 Rechercher..." oninput="searchFilter()" />
-  </div>
-  <div class="clients" id="clientsContainer"></div>
-
-  <div class="modal" id="modal">
-    <div class="modal-content">
-      <span class="close-btn" onclick="closeModal()">×</span>
-      <div id="modalBody"></div>
-    </div>
-  </div>
-
-  <script>
+<div class="topbar">
+<div class="dropdown-menu" id="menu">
+<button onclick="openModal('client')">➕ Ajouter client</button>
+<button onclick="openModal('category')">📂 Ajouter catégorie</button>
+<button onclick="openModal('procedure')">📄 Ajouter procédure</button>
+<button onclick="exportHTML()">💾 Exporter</button>
+<button onclick="toggleEdit()">🛠️ Mode édition</button>
+</div>
+<button class="menu-toggle" onclick="toggleMenu()">⚙️</button>
+</div>
+<h1>📘 Procédures par Client</h1>
+<div class="search-bar">
+<input id="searchInput" oninput="searchFilter()" placeholder="🔍 Rechercher..." type="text"/>
+</div>
+<div class="clients" id="clientsContainer"></div>
+<div class="modal" id="modal">
+<div class="modal-content">
+<span class="close-btn" onclick="closeModal()">×</span>
+<div id="modalBody"></div>
+</div>
+</div>
+<div class="modal" id="modalProcedure" style="display:none;">
+<div class="modal-content">
+<span class="close-btn" onclick="closeModal()">×</span>
+<h3 style="color:#58a6ff;">Ajouter une procédure</h3>
+<select id="procClientSelect" onchange="updateCategorySelect()" style="margin-top:10px; width:100%; padding:10px; background:#21262d; color:white; border:none; border-radius:8px;"></select>
+<select id="procCategorySelect" style="margin-top:10px; width:100%; padding:10px; background:#21262d; color:white; border:none; border-radius:8px;"></select>
+<input id="procName" placeholder="Nom de la procédure" style="margin-top:10px; width:100%; padding:10px; background:#21262d; color:white; border:none; border-radius:8px;" type="text"/>
+<input id="procLink" placeholder="Lien de la procédure" style="margin-top:10px; width:100%; padding:10px; background:#21262d; color:white; border:none; border-radius:8px;" type="text"/>
+<button onclick="addProcedure()" style="margin-top:15px; background:#238636; color:white; border:none; padding:10px 20px; border-radius:8px;">Ajouter</button>
+</div>
+</div>
+<script>
     let clients = JSON.parse(localStorage.getItem("clientsData")) || [];
     let editing = false;
     let selectedClientIndex = 0;
@@ -149,6 +188,7 @@
     }
     function closeModal() {
       document.getElementById("modal").style.display = "none";
+      document.getElementById("modalProcedure").style.display = "none";
     }
     function addClient() {
       const name = document.getElementById("clientName").value.trim();
@@ -158,15 +198,7 @@
       saveAndRender();
       closeModal();
     }
-    function addCategory() {
-      const idx = parseInt(document.getElementById("catIndex").value);
-      const name = document.getElementById("catName").value.trim();
-      if (clients[idx]) {
-        clients[idx].categories.push({ name, procedures: [] });
-        saveAndRender();
-        closeModal();
-      }
-    }
+    
     function addProcedure() {
       const c = parseInt(document.getElementById("procClient").value);
       const cat = parseInt(document.getElementById("procCat").value);
@@ -262,5 +294,99 @@
     }
     render();
   </script>
-</body>
+<script>
+function openModal(type) {
+  const modal = document.getElementById("modal");
+  const modalBody = document.getElementById("modalBody");
+  const modalProc = document.getElementById("modalProcedure");
+
+  if (type === "procedure") {
+    modal.style.display = "none";
+    modalProc.style.display = "block";
+    populateClientSelect();
+  } else {
+    modalProc.style.display = "none";
+    modal.style.display = "block";
+    if (type === "client") {
+      modalBody.innerHTML = '<h3 style="color:#58a6ff;">Ajouter un client</h3>' +
+        '<input id="clientName" placeholder="Nom du client">' +
+        '<input id="clientLogo" placeholder="Lien du logo (URL)">' +
+        '<button onclick="addClient()">Ajouter</button>';
+    } else if (type === "category") {
+      modalBody.innerHTML = '<h3 style="color:#58a6ff;">Ajouter une catégorie</h3>' +
+        '<input id="categoryName" placeholder="Nom de la catégorie">' +
+        '<select id="categoryClient"></select>' +
+        '<button onclick="addCategory()">Ajouter</button>';
+      populateClientSelect("categoryClient");
+    }
+  }
+}
+
+function populateClientSelect(selectId = "procClientSelect") {
+  const select = document.getElementById(selectId);
+  select.innerHTML = "";
+  clients.forEach((client, index) => {
+    const opt = document.createElement("option");
+    opt.value = index;
+    opt.textContent = client.name;
+    select.appendChild(opt);
+  });
+  if (selectId === "procClientSelect") updateCategorySelect();
+}
+
+function updateCategorySelect() {
+  const clientIndex = document.getElementById("procClientSelect").value;
+  const categorySelect = document.getElementById("procCategorySelect");
+  categorySelect.innerHTML = "";
+  if (clients[clientIndex] && clients[clientIndex].categories) {
+    clients[clientIndex].categories.forEach((cat, index) => {
+      const opt = document.createElement("option");
+      opt.value = index;
+      opt.textContent = cat.name;
+      categorySelect.appendChild(opt);
+    });
+  }
+}
+
+
+
+
+
+function addCategory() {
+  const clientIndex = document.getElementById("categoryClient").value;
+  const categoryName = document.getElementById("categoryName").value.trim();
+  if (!categoryName) {
+    alert("Le nom de la catégorie est vide");
+    return;
+  }
+  if (!clients[clientIndex].categories) clients[clientIndex].categories = [];
+  clients[clientIndex].categories.push({ name: categoryName, procedures: [] });
+  localStorage.setItem("clientsData", JSON.stringify(clients));
+  render();
+  closeModal();
+}
+
+
+function addProcedure() {
+  const clientIndex = document.getElementById("procClientSelect").value;
+  const catIndex = document.getElementById("procCategorySelect").value;
+  const name = document.getElementById("procName").value.trim();
+  const link = document.getElementById("procLink").value.trim();
+
+  if (!name || !link) {
+    alert("Nom ou lien manquant");
+    return;
+  }
+  if (!clients[clientIndex] || !clients[clientIndex].categories[catIndex]) {
+    alert("Client ou catégorie invalide");
+    return;
+  }
+
+  clients[clientIndex].categories[catIndex].procedures.push({ name, link });
+  localStorage.setItem("clientsData", JSON.stringify(clients));
+  render();
+  closeModal();
+}
+
+</script></body>
 </html>
