@@ -109,6 +109,17 @@
 .modal-content button:hover {
   background-color: #2ea043;
 }
+
+.clients {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  justify-items: center;
+  align-items: start;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1000px;
+  margin: auto;
+}
 </style>
 </head>
 <body>
@@ -120,7 +131,6 @@
 <button onclick="exportHTML()">💾 Exporter</button>
 <button onclick="document.getElementById('jsonInput').click()">📂 Importer</button>
 <input accept=".json" id="jsonInput" onchange="importJSON(event)" style="display:none;" type="file"/>
-
 <button onclick="toggleEdit()">🛠️ Mode édition</button>
 </div>
 <button class="menu-toggle" onclick="toggleMenu()">⚙️</button>
@@ -148,7 +158,7 @@
 </div>
 </div>
 <script>
-    let clients = JSON.parse(localStorage.getItem("clientsData")) || [];
+    let clients = [{"name": "PMU", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/a/aa/PMU.svg/1280px-PMU.svg.png", "categories": [{"name": "BORNE PMC", "procedures": []}, {"name": "BORNE IDEMIA", "procedures": []}, {"name": "TERMINAL", "procedures": []}, {"name": "EIPDV", "procedures": []}, {"name": "OTT", "procedures": []}, {"name": "TPLINK", "procedures": []}, {"name": "AUTRES", "procedures": []}]}, {"name": "NICKEL", "logo": "https://cdn.cookielaw.org/logos/716f7201-def5-41ba-bb74-b0904c984cda/5977cdf8-e8ac-43bd-bd0c-cf69aa2b429d/10ebcb46-878c-4ea6-b9d2-f4d84404e71d/Nickel_RVB_FondBlanc_Couleur-eps.png", "categories": [{"name": "BORNE", "procedures": []}, {"name": "TPE", "procedures": []}, {"name": "AUTRES", "procedures": []}]}, {"name": "RCBT BOUYGUES", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Bouygues_Telecom_201x_logo.svg/960px-Bouygues_Telecom_201x_logo.svg.png", "categories": []}, {"name": "SEPHORA", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Sephora_logo.svg/1280px-Sephora_logo.svg.png", "categories": []}, {"name": "YVES ROCHER", "logo": "https://upload.wikimedia.org/wikipedia/fr/2/2d/Yves_Rocher_logo.svg", "categories": []}, {"name": "MACIF", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/2/2a/Logo_Macif.svg/500px-Logo_Macif.svg.png?20191211002907", "categories": []}, {"name": "ARKEA", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/2/21/Logo_Cr%C3%A9dit_mutuel_Ark%C3%A9a.svg/2560px-Logo_Cr%C3%A9dit_mutuel_Ark%C3%A9a.svg.png", "categories": []}, {"name": "BPMED", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/4/49/Logo_Banque_Populaire_2018.svg/512px-Logo_Banque_Populaire_2018.svg.png?20181019210708", "categories": []}, {"name": "JULES", "logo": "https://cdn.worldvectorlogo.com/logos/logo-jules-1.svg", "categories": []}, {"name": "IKKS", "logo": "https://images.seeklogo.com/logo-png/36/2/ikks-logo-png_seeklogo-361080.png", "categories": []}, {"name": "CEPAC", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/9/92/Logo_Caisse_d%27%C3%89pargne_-_2021.svg/700px-Logo_Caisse_d%27%C3%89pargne_-_2021.svg.png?20230131124740", "categories": []}, {"name": "CCOOP", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/2/2e/Logo_Cr%C3%A9dit_Coop%C3%A9ratif.svg/1200px-Logo_Cr%C3%A9dit_Coop%C3%A9ratif.svg.png", "categories": []}, {"name": "CAMAIEU", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Cama%C3%AFeu_logo_%282017%29.svg/2560px-Cama%C3%AFeu_logo_%282017%29.svg.png", "categories": []}, {"name": "MY MONEY BANK", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/1/1f/Logo_mmb_0.svg/2560px-Logo_mmb_0.svg.png", "categories": []}, {"name": "CREDIT AGRICOLE", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/a/a6/Cr%C3%A9dit_Agricole.svg/2560px-Cr%C3%A9dit_Agricole.svg.png", "categories": []}];
     let editing = false;
     let selectedClientIndex = 0;
 
@@ -242,7 +252,6 @@
         img.className = "client-logo";
         img.onclick = () => {
           const content = document.getElementById("content-" + cIdx);
-          content.style.display = content.style.display === "block" ? "none" : "block";
         };
         const delBtn = document.createElement("button");
         delBtn.textContent = "🗑️";
@@ -409,5 +418,62 @@ function importJSON(event) {
         reader.readAsText(file);
     }
 }
+</script>
+
+<div class="modal" id="clientModal" style="display:none;">
+<div class="modal-content" id="clientModalContent" style="max-height: 80vh; overflow-y: auto;">
+<span class="close-btn" onclick="closeClientModal()">×</span>
+<div id="clientModalBody"></div>
+</div>
+</div>
+<script>
+function showClientModal(index) {
+  const modal = document.getElementById("clientModal");
+  const body = document.getElementById("clientModalBody");
+  const client = clients[index];
+  let html = "<h2 style='color:#58a6ff; text-align:center;'>" + client.name + "</h2>";
+  html += "<img src='" + client.logo + "' style='display:block; margin: 10px auto; width:80px;' />";
+  if (!client.categories || client.categories.length === 0) {
+    html += "<p style='text-align:center;'>Aucune catégorie.</p>";
+  } else {
+    client.categories.forEach((cat, catIdx) => {
+      html += "<div class='category'><h4>" + cat.name + "</h4>";
+      if (editing) {
+        html += "<button class='delete-btn' onclick='deleteCategory(" + index + "," + catIdx + ")'>🗑️</button>";
+      }
+      if (cat.procedures && cat.procedures.length > 0) {
+        cat.procedures.forEach((proc, pIdx) => {
+          html += "<div class='procedure'><a href='" + proc.link + "' target='_blank'>" + proc.name + "</a>";
+          if (editing) {
+            html += "<button class='delete-btn' onclick='deleteProcedure(" + index + "," + catIdx + "," + pIdx + ")'>🗑️</button>";
+          }
+          html += "</div>";
+        });
+      } else {
+        html += "<p style='margin-left:10px;'>Aucune procédure.</p>";
+      }
+      html += "</div>";
+    });
+  }
+  body.innerHTML = html;
+  modal.style.display = "block";
+}
+
+function closeClientModal() {
+  document.getElementById("clientModal").style.display = "none";
+}
+
+// Réappliquer les événements après le render()
+function bindClientLogoClicks() {
+  document.querySelectorAll(".client-logo").forEach((logo, index) => {
+    logo.onclick = () => showClientModal(index);
+  });
+}
+
+const originalRender = render;
+render = function() {
+  originalRender();
+  bindClientLogoClicks();
+};
 </script></body>
 </html>
