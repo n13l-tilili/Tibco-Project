@@ -307,15 +307,15 @@
 
     <button class="menu-btn" onclick="toggleMenu('mail')">📨 Générateur de mail</button>
     <div class="submenu" id="menu-mail">
-      <a href="#">📦 Expédition : INTER CTI</a>
-      <a href="#">🔧 Expédition : COORD PMU</a>
-      <a href="#">📋 Suspensions Journalier</a>
+      <a href="#" onclick="showSection('iframe-cti')">📦 Expédition : INTER CTI</a>
+      <a href="#" onclick="showSection('iframe-coord')">🔧 Expédition : COORD PMU</a>
+      <a href="#" onclick="showSection('iframe-susp')">📋 Suspensions Journalier</a>
     </div>
 
     <button class="menu-btn" onclick="toggleMenu('outils')">🧰 Outils</button>
     <div class="submenu" id="menu-outils">
-      <a href="#">📘 Procédure</a>
-      <a href="#">📦 Scan Conso PMU</a>
+      <a href="#" onclick="showSection('iframe-proc')">📘 Procédure</a>
+      <a href="#" onclick="showSection('iframe-scan')">📦 Scan Conso PMU</a>
     </div>
 
     <button class="menu-btn" onclick="toggleMenu('planning')">📅 Planning</button>
@@ -327,6 +327,25 @@
   </aside>
 
   <main>
+
+<div id="welcome" class="page-section" style="display:block;">
+  <section style="max-width: 800px; margin: 0 auto;">
+    <h1 style="font-size: 24px; color: var(--primary); margin-bottom: 10px;">Bienvenue sur l'Outil Tibco Marseille</h1>
+    <p style="font-size: 16px; color: #ccc; line-height: 1.6;">
+      Cet outil a été conçu pour centraliser tous les accès aux services opérationnels de Tibco Marseille.
+      Vous y trouverez les générateurs de mails, les procédures clients, les outils de gestion PMU, le planning des techniciens, ainsi qu’un accès direct au catalogue des pièces.
+    </p>
+    <p style="font-size: 16px; color: #ccc; line-height: 1.6;">
+      Utilisez le menu latéral pour naviguer dans les différentes sections. Le bouton ☰ vous permet d’afficher ou masquer le menu selon vos besoins.
+    </p>
+  </section>
+</div>
+<iframe id="iframe-cti" class="page-section" src="cti.html" style="display:none; width:100%; height:700px; border:none;"></iframe>
+<iframe id="iframe-coord" class="page-section" src="coord.html" style="display:none; width:100%; height:700px; border:none;"></iframe>
+<iframe id="iframe-susp" class="page-section" src="suspensions.html" style="display:none; width:100%; height:700px; border:none;"></iframe>
+<iframe id="iframe-proc" class="page-section" src="procedure.html" style="display:none; width:100%; height:700px; border:none;"></iframe>
+<iframe id="iframe-scan" class="page-section" src="scan_conso.html" style="display:none; width:100%; height:700px; border:none;"></iframe>
+
     <section style="max-width: 800px; margin: 0 auto;">
       <h1 style="font-size: 24px; color: var(--primary); margin-bottom: 10px;">Bienvenue sur l'Outil Tibco Marseille</h1>
       <p style="font-size: 16px; color: #ccc; line-height: 1.6;">
@@ -355,7 +374,15 @@ function toggleSidebar() {
       sidebar.classList.toggle("closed");
     }
 
-    function toggleMenu(id) {
+    
+function showSection(id) {
+  const sections = document.querySelectorAll(".page-section");
+  sections.forEach(sec => sec.style.display = "none");
+  const el = document.getElementById(id);
+  if (el) el.style.display = "block";
+}
+
+function toggleMenu(id) {
       const el = document.getElementById("menu-" + id);
       el.classList.toggle("open");
     }
@@ -702,20 +729,5 @@ function toggleSidebar() {
   }
 </script>
 
-
-<script>
-  function loadPage(page) {
-    fetch(page)
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById("main-content").innerHTML = html;
-      })
-      .catch(error => {
-        document.getElementById("main-content").innerHTML = "<p style='color:red;'>Erreur de chargement</p>";
-        console.error(error);
-      });
-  }
-</script>
 </body>
-
 </html>
