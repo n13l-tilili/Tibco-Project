@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Procédures Clients</title>
+  <style>
+    body { background-color: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', sans-serif; margin: 0; }
+    h1 { text-align: center; color: #58a6ff; margin: 20px 0; text-shadow: 0 0 10px #58a6ff; }
+    .topbar { display: flex; justify-content: space-between; padding: 10px 20px; position: relative; }
+    .menu-toggle {
+      background: #161b22; color: #58a6ff; border: 2px solid #58a6ff;
+      padding: 8px 14px; border-radius: 25px; cursor: pointer;
+      box-shadow: 0 0 6px #58a6ff77;
+    }
+    .dropdown-menu {
+      display: none; position: absolute; top: 45px; left: 20px;
+      background: #161b22; border: 1px solid #58a6ff88; border-radius: 10px;
+      box-shadow: 0 0 10px #58a6ff55; z-index: 1000;
+    }
+    .dropdown-menu button {
+      display: block; width: 100%; background: transparent;
+      border: none; padding: 10px 15px; color: #58a6ff;
+      text-align: left; cursor: pointer;
+    }
+    .dropdown-menu button:hover { background-color: #21262d; }
+    .search-bar { width: 90%; max-width: 400px; margin: 0 auto 20px auto; display: flex; justify-content: center; }
+    .search-bar input {
+      width: 100%; padding: 12px; font-size: 16px;
+      border-radius: 30px; border: none;
+      background-color: #161b22; color: #58a6ff;
+      box-shadow: 0 0 10px #58a6ff55;
+    }
+    .clients { display: flex; flex-direction: column; align-items: center; gap: 20px; margin: 10px 20px; }
+    .client-wrapper { text-align: center; position: relative; }
+    .client-logo {
+      width: 100px; height: 100px; object-fit: contain; cursor: pointer;
+      border-radius: 12px; box-shadow: 0 0 10px #58a6ff99; transition: transform 0.2s;
+    }
+    .client-logo:hover { transform: scale(1.1); }
+    .client-content {
+      width: 90%; max-width: 500px; background: #161b22;
+      margin: 10px auto 0 auto; border-radius: 10px; padding: 10px;
+      display: none; animation: fadeSlide 0.4s ease-in-out forwards;
+      box-shadow: 0 0 8px #58a6ff44;
+    }
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: translateY(-10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .category { background: #21262d; margin: 10px 0; padding: 10px; border-radius: 10px; position: relative; }
+    .category h4 { margin: 0 0 6px 0; color: #58a6ff; }
+    .procedure {
+      background: #30363d; padding: 5px 10px; margin: 4px 0; border-radius: 6px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .procedure a { color: #58a6ff; text-decoration: none; }
+    .delete-btn {
+      background: red; border: none; color: white;
+      border-radius: 10px; padding: 5px; margin-left: 10px;
+      display: none; cursor: pointer; font-size: 12px;
+    }
+    .modal { display: none; position: fixed; z-index: 9999;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(6px);
+    }
+    .modal-content {
+      background: #161b22; color: #fff; padding: 20px;
+      border-radius: 10px; width: 90%; max-width: 400px;
+      margin: 10% auto; position: relative;
+    }
+    .modal-content input {
+      width: 100%; margin-bottom: 10px; padding: 10px; border-radius: 8px;
+      border: none; background: #30363d; color: #fff;
+    }
+    .modal-content button { margin-top: 10px; }
+    .close-btn {
+      position: absolute; top: 10px; right: 12px;
+      color: red; font-weight: bold; font-size: 18px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="dropdown-menu" id="menu">
+      <button onclick="openModal('client')">➕ Ajouter client</button>
+      <button onclick="openModal('category')">📂 Ajouter catégorie</button>
+      <button onclick="openModal('procedure')">📄 Ajouter procédure</button>
+      <button onclick="exportHTML()">💾 Exporter</button>
+      <button onclick="toggleEdit()">🛠️ Mode édition</button>
+    </div>
+    <button class="menu-toggle" onclick="toggleMenu()">⚙️</button>
+  </div>
+
+  <h1>📘 Procédures par Client</h1>
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="🔍 Rechercher..." oninput="searchFilter()" />
+  </div>
+  <div class="clients" id="clientsContainer"></div>
+
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">×</span>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    let clients = JSON.parse(localStorage.getItem("clientsData")) || [];
+    let editing = false;
+    let selectedClientIndex = 0;
+
+    function toggleMenu() {
+      const menu = document.getElementById("menu");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+    function toggleEdit() {
+      editing = !editing;
+      document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.style.display = editing ? "inline-block" : "none";
+      });
+    }
+    function openModal(type) {
+      const modal = document.getElementById("modal");
+      const body = document.getElementById("modalBody");
+      body.innerHTML = "";
+      if (type === "client") {
+        body.innerHTML = `
+          <h3>Ajouter un client</h3>
+          <input type='text' id='clientName' placeholder='Nom du client'>
+          <input type='text' id='clientLogo' placeholder='URL du logo'>
+          <button onclick='addClient()'>Ajouter</button>`;
+      } else if (type === "category") {
+        body.innerHTML = `
+          <h3>Ajouter une catégorie</h3>
+          <input type='number' id='catIndex' placeholder='Index client'>
+          <input type='text' id='catName' placeholder='Nom de la catégorie'>
+          <button onclick='addCategory()'>Ajouter</button>`;
+      } else if (type === "procedure") {
+        body.innerHTML = `
+          <h3>Ajouter une procédure</h3>
+          <input type='number' id='procClient' placeholder='Index client'>
+          <input type='number' id='procCat' placeholder='Index catégorie'>
+          <input type='text' id='procName' placeholder='Nom de la procédure'>
+          <input type='text' id='procLink' placeholder='Lien HTML'>
+          <button onclick='addProcedure()'>Ajouter</button>`;
+      }
+      modal.style.display = "block";
+    }
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+    function addClient() {
+      const name = document.getElementById("clientName").value.trim();
+      const logo = document.getElementById("clientLogo").value.trim();
+      if (!name || !logo) return;
+      clients.push({ name, logo, categories: [] });
+      saveAndRender();
+      closeModal();
+    }
+    function addCategory() {
+      const idx = parseInt(document.getElementById("catIndex").value);
+      const name = document.getElementById("catName").value.trim();
+      if (clients[idx]) {
+        clients[idx].categories.push({ name, procedures: [] });
+        saveAndRender();
+        closeModal();
+      }
+    }
+    function addProcedure() {
+      const c = parseInt(document.getElementById("procClient").value);
+      const cat = parseInt(document.getElementById("procCat").value);
+      const name = document.getElementById("procName").value.trim();
+      const link = document.getElementById("procLink").value.trim();
+      if (clients[c] && clients[c].categories[cat]) {
+        clients[c].categories[cat].procedures.push({ name, link });
+        saveAndRender();
+        closeModal();
+      }
+    }
+    function saveAndRender() {
+      localStorage.setItem("clientsData", JSON.stringify(clients));
+      render();
+    }
+    function searchFilter() {
+      const value = document.getElementById("searchInput").value.toLowerCase();
+      document.querySelectorAll(".client-wrapper").forEach(wrapper => {
+        const content = wrapper.querySelector(".client-content");
+        const logoAlt = wrapper.querySelector(".client-logo").alt.toLowerCase();
+        let matchesClient = logoAlt.includes(value);
+        let matchesProcedure = false;
+        wrapper.querySelectorAll(".procedure a").forEach(proc => {
+          if (proc.textContent.toLowerCase().includes(value)) matchesProcedure = true;
+        });
+        wrapper.style.display = matchesClient || matchesProcedure ? "block" : "none";
+      });
+    }
+    function render() {
+      const container = document.getElementById("clientsContainer");
+      container.innerHTML = "";
+      clients.forEach((client, cIdx) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "client-wrapper";
+        const img = document.createElement("img");
+        img.src = client.logo;
+        img.alt = client.name;
+        img.className = "client-logo";
+        img.onclick = () => {
+          const content = document.getElementById("content-" + cIdx);
+          content.style.display = content.style.display === "block" ? "none" : "block";
+        };
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "🗑️";
+        delBtn.className = "delete-btn";
+        delBtn.onclick = () => {
+          clients.splice(cIdx, 1);
+          saveAndRender();
+        };
+        const content = document.createElement("div");
+        content.className = "client-content";
+        content.id = "content-" + cIdx;
+        client.categories.forEach((cat, catIdx) => {
+          const catDiv = document.createElement("div");
+          catDiv.className = "category";
+          catDiv.innerHTML = `<h4>${cat.name}</h4>`;
+          const catDel = document.createElement("button");
+          catDel.textContent = "🗑️";
+          catDel.className = "delete-btn";
+          catDel.onclick = () => {
+            client.categories.splice(catIdx, 1);
+            saveAndRender();
+          };
+          catDiv.appendChild(catDel);
+          cat.procedures.forEach((proc, pIdx) => {
+            const p = document.createElement("div");
+            p.className = "procedure";
+            p.innerHTML = `<a href="${proc.link}" target="_blank">${proc.name}</a>`;
+            const procDel = document.createElement("button");
+            procDel.textContent = "🗑️";
+            procDel.className = "delete-btn";
+            procDel.onclick = () => {
+              cat.procedures.splice(pIdx, 1);
+              saveAndRender();
+            };
+            p.appendChild(procDel);
+            catDiv.appendChild(p);
+          });
+          content.appendChild(catDiv);
+        });
+        wrapper.appendChild(img);
+        wrapper.appendChild(delBtn);
+        wrapper.appendChild(content);
+        container.appendChild(wrapper);
+      });
+    }
+    function exportHTML() {
+      const blob = new Blob([JSON.stringify(clients)], { type: "application/json" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "clients_data.json";
+      link.click();
+    }
+    render();
+  </script>
+</body>
+</html>
