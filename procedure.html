@@ -158,154 +158,59 @@
 </div>
 </div>
 <script>
-    let clients = [{"name": "PMU", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/a/aa/PMU.svg/1280px-PMU.svg.png", "categories": [{"name": "BORNE PMC", "procedures": []}, {"name": "BORNE IDEMIA", "procedures": []}, {"name": "TERMINAL", "procedures": []}, {"name": "EIPDV", "procedures": []}, {"name": "OTT", "procedures": []}, {"name": "TPLINK", "procedures": []}, {"name": "AUTRES", "procedures": []}]}, {"name": "NICKEL", "logo": "https://cdn.cookielaw.org/logos/716f7201-def5-41ba-bb74-b0904c984cda/5977cdf8-e8ac-43bd-bd0c-cf69aa2b429d/10ebcb46-878c-4ea6-b9d2-f4d84404e71d/Nickel_RVB_FondBlanc_Couleur-eps.png", "categories": [{"name": "BORNE", "procedures": []}, {"name": "TPE", "procedures": []}, {"name": "AUTRES", "procedures": []}]}, {"name": "RCBT BOUYGUES", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Bouygues_Telecom_201x_logo.svg/960px-Bouygues_Telecom_201x_logo.svg.png", "categories": []}, {"name": "SEPHORA", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Sephora_logo.svg/1280px-Sephora_logo.svg.png", "categories": []}, {"name": "YVES ROCHER", "logo": "https://upload.wikimedia.org/wikipedia/fr/2/2d/Yves_Rocher_logo.svg", "categories": []}, {"name": "MACIF", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/2/2a/Logo_Macif.svg/500px-Logo_Macif.svg.png?20191211002907", "categories": []}, {"name": "ARKEA", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/2/21/Logo_Cr%C3%A9dit_mutuel_Ark%C3%A9a.svg/2560px-Logo_Cr%C3%A9dit_mutuel_Ark%C3%A9a.svg.png", "categories": []}, {"name": "BPMED", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/4/49/Logo_Banque_Populaire_2018.svg/512px-Logo_Banque_Populaire_2018.svg.png?20181019210708", "categories": []}, {"name": "JULES", "logo": "https://cdn.worldvectorlogo.com/logos/logo-jules-1.svg", "categories": []}, {"name": "IKKS", "logo": "https://images.seeklogo.com/logo-png/36/2/ikks-logo-png_seeklogo-361080.png", "categories": []}, {"name": "CEPAC", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/9/92/Logo_Caisse_d%27%C3%89pargne_-_2021.svg/700px-Logo_Caisse_d%27%C3%89pargne_-_2021.svg.png?20230131124740", "categories": []}, {"name": "CCOOP", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/2/2e/Logo_Cr%C3%A9dit_Coop%C3%A9ratif.svg/1200px-Logo_Cr%C3%A9dit_Coop%C3%A9ratif.svg.png", "categories": []}, {"name": "CAMAIEU", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Cama%C3%AFeu_logo_%282017%29.svg/2560px-Cama%C3%AFeu_logo_%282017%29.svg.png", "categories": []}, {"name": "MY MONEY BANK", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/1/1f/Logo_mmb_0.svg/2560px-Logo_mmb_0.svg.png", "categories": []}, {"name": "CREDIT AGRICOLE", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/a/a6/Cr%C3%A9dit_Agricole.svg/2560px-Cr%C3%A9dit_Agricole.svg.png", "categories": []}];
-    let editing = false;
-    let selectedClientIndex = 0;
+let clients = [{"name": "PMU", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/a/aa/PMU.svg/1280px-PMU.svg.png", "categories": [{"name": "BORNE PMC", "procedures": []}, {"name": "BORNE IDEMIA", "procedures": []}, {"name": "TERMINAL", "procedures": []}, {"name": "EIPDV", "procedures": []}, {"name": "OTT", "procedures": []}, {"name": "TPLINK", "procedures": []}, {"name": "AUTRES", "procedures": []}]}, {"name": "NICKEL", "logo": "https://cdn.cookielaw.org/logos/716f7201-def5-41ba-bb74-b0904c984cda/5977cdf8-e8ac-43bd-bd0c-cf69aa2b429d/10ebcb46-878c-4ea6-b9d2-f4d84404e71d/Nickel_RVB_FondBlanc_Couleur-eps.png", "categories": [{"name": "BORNE", "procedures": []}, {"name": "TPE", "procedures": []}, {"name": "AUTRES", "procedures": []}]}, {"name": "RCBT BOUYGUES", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Bouygues_Telecom_201x_logo.svg/960px-Bouygues_Telecom_201x_logo.svg.png", "categories": []}, {"name": "SEPHORA", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Sephora_logo.svg/1280px-Sephora_logo.svg.png", "categories": []}, {"name": "YVES ROCHER", "logo": "https://upload.wikimedia.org/wikipedia/fr/2/2d/Yves_Rocher_logo.svg", "categories": []}, {"name": "MACIF", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/2/2a/Logo_Macif.svg/500px-Logo_Macif.svg.png?20191211002907", "categories": []}, {"name": "ARKEA", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/2/21/Logo_Cr%C3%A9dit_mutuel_Ark%C3%A9a.svg/2560px-Logo_Cr%C3%A9dit_mutuel_Ark%C3%A9a.svg.png", "categories": []}, {"name": "BPMED", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/4/49/Logo_Banque_Populaire_2018.svg/512px-Logo_Banque_Populaire_2018.svg.png?20181019210708", "categories": []}, {"name": "JULES", "logo": "https://cdn.worldvectorlogo.com/logos/logo-jules-1.svg", "categories": []}, {"name": "IKKS", "logo": "https://images.seeklogo.com/logo-png/36/2/ikks-logo-png_seeklogo-361080.png", "categories": []}, {"name": "CEPAC", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/9/92/Logo_Caisse_d%27%C3%89pargne_-_2021.svg/700px-Logo_Caisse_d%27%C3%89pargne_-_2021.svg.png?20230131124740", "categories": []}, {"name": "CCOOP", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/2/2e/Logo_Cr%C3%A9dit_Coop%C3%A9ratif.svg/1200px-Logo_Cr%C3%A9dit_Coop%C3%A9ratif.svg.png", "categories": []}, {"name": "CAMAIEU", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Cama%C3%AFeu_logo_%282017%29.svg/2560px-Cama%C3%AFeu_logo_%282017%29.svg.png", "categories": []}, {"name": "MY MONEY BANK", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/1/1f/Logo_mmb_0.svg/2560px-Logo_mmb_0.svg.png", "categories": []}, {"name": "CREDIT AGRICOLE", "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/a/a6/Cr%C3%A9dit_Agricole.svg/2560px-Cr%C3%A9dit_Agricole.svg.png", "categories": []}];
+let editing = false;
+let selectedClientIndex = 0;
 
-    function toggleMenu() {
-      const menu = document.getElementById("menu");
-      menu.style.display = menu.style.display === "block" ? "none" : "block";
-    }
-    function toggleEdit() {
-      editing = !editing;
-      document.querySelectorAll(".delete-btn").forEach(btn => {
-        btn.style.display = editing ? "inline-block" : "none";
-      });
-    }
-    function openModal(type) {
-      const modal = document.getElementById("modal");
-      const body = document.getElementById("modalBody");
-      body.innerHTML = "";
-      if (type === "client") {
-        body.innerHTML = `
-          <h3>Ajouter un client</h3>
-          <input type='text' id='clientName' placeholder='Nom du client'>
-          <input type='text' id='clientLogo' placeholder='URL du logo'>
-          <button onclick='addClient()'>Ajouter</button>`;
-      } else if (type === "category") {
-        body.innerHTML = `
-          <h3>Ajouter une catégorie</h3>
-          <input type='number' id='catIndex' placeholder='Index client'>
-          <input type='text' id='catName' placeholder='Nom de la catégorie'>
-          <button onclick='addCategory()'>Ajouter</button>`;
-      } else if (type === "procedure") {
-        body.innerHTML = `
-          <h3>Ajouter une procédure</h3>
-          <input type='number' id='procClient' placeholder='Index client'>
-          <input type='number' id='procCat' placeholder='Index catégorie'>
-          <input type='text' id='procName' placeholder='Nom de la procédure'>
-          <input type='text' id='procLink' placeholder='Lien HTML'>
-          <button onclick='addProcedure()'>Ajouter</button>`;
-      }
-      modal.style.display = "block";
-    }
-    function closeModal() {
-      document.getElementById("modal").style.display = "none";
-      document.getElementById("modalProcedure").style.display = "none";
-    }
-    function addClient() {
-      const name = document.getElementById("clientName").value.trim();
-      const logo = document.getElementById("clientLogo").value.trim();
-      if (!name || !logo) return;
-      clients.push({ name, logo, categories: [] });
+function toggleMenu() {
+  const menu = document.getElementById("menu");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+function toggleEdit() {
+  editing = !editing;
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.style.display = editing ? "inline-block" : "none";
+  });
+}
+
+function saveAndRender() {
+  render();
+  bindClientLogoClicks();
+}
+
+function render() {
+  const container = document.getElementById("clientsContainer");
+  container.innerHTML = "";
+  clients.forEach((client, cIdx) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "client-wrapper";
+    const img = document.createElement("img");
+    img.src = client.logo;
+    img.alt = client.name;
+    img.className = "client-logo";
+    const delBtn = document.createElement("button");
+    delBtn.textContent = "🗑️";
+    delBtn.className = "delete-btn";
+    delBtn.onclick = () => {
+      clients.splice(cIdx, 1);
       saveAndRender();
-      closeModal();
-    }
-    
-    function addProcedure() {
-      const c = parseInt(document.getElementById("procClient").value);
-      const cat = parseInt(document.getElementById("procCat").value);
-      const name = document.getElementById("procName").value.trim();
-      const link = document.getElementById("procLink").value.trim();
-      if (clients[c] && clients[c].categories[cat]) {
-        clients[c].categories[cat].procedures.push({ name, link });
-        saveAndRender();
-        closeModal();
-      }
-    }
-    function saveAndRender() {
-      localStorage.setItem("clientsData", JSON.stringify(clients));
-      render();
-    }
-    function searchFilter() {
-      const value = document.getElementById("searchInput").value.toLowerCase();
-      document.querySelectorAll(".client-wrapper").forEach(wrapper => {
-        const content = wrapper.querySelector(".client-content");
-        const logoAlt = wrapper.querySelector(".client-logo").alt.toLowerCase();
-        let matchesClient = logoAlt.includes(value);
-        let matchesProcedure = false;
-        wrapper.querySelectorAll(".procedure a").forEach(proc => {
-          if (proc.textContent.toLowerCase().includes(value)) matchesProcedure = true;
-        });
-        wrapper.style.display = matchesClient || matchesProcedure ? "block" : "none";
-      });
-    }
-    function render() {
-      const container = document.getElementById("clientsContainer");
-      container.innerHTML = "";
-      clients.forEach((client, cIdx) => {
-        const wrapper = document.createElement("div");
-        wrapper.className = "client-wrapper";
-        const img = document.createElement("img");
-        img.src = client.logo;
-        img.alt = client.name;
-        img.className = "client-logo";
-        img.onclick = () => {
-          const content = document.getElementById("content-" + cIdx);
-        };
-        const delBtn = document.createElement("button");
-        delBtn.textContent = "🗑️";
-        delBtn.className = "delete-btn";
-        delBtn.onclick = () => {
-          clients.splice(cIdx, 1);
-          saveAndRender();
-        };
-        const content = document.createElement("div");
-        content.className = "client-content";
-        content.id = "content-" + cIdx;
-        client.categories.forEach((cat, catIdx) => {
-          const catDiv = document.createElement("div");
-          catDiv.className = "category";
-          catDiv.innerHTML = `<h4>${cat.name}</h4>`;
-          const catDel = document.createElement("button");
-          catDel.textContent = "🗑️";
-          catDel.className = "delete-btn";
-          catDel.onclick = () => {
-            client.categories.splice(catIdx, 1);
-            saveAndRender();
-          };
-          catDiv.appendChild(catDel);
-          cat.procedures.forEach((proc, pIdx) => {
-            const p = document.createElement("div");
-            p.className = "procedure";
-            p.innerHTML = `<a href="${proc.link}" target="_blank">${proc.name}</a>`;
-            const procDel = document.createElement("button");
-            procDel.textContent = "🗑️";
-            procDel.className = "delete-btn";
-            procDel.onclick = () => {
-              cat.procedures.splice(pIdx, 1);
-              saveAndRender();
-            };
-            p.appendChild(procDel);
-            catDiv.appendChild(p);
-          });
-          content.appendChild(catDiv);
-        });
-        wrapper.appendChild(img);
-        wrapper.appendChild(delBtn);
-        wrapper.appendChild(content);
-        container.appendChild(wrapper);
-      });
-    }
-    function exportHTML() {
-      const blob = new Blob([JSON.stringify(clients)], { type: "application/json" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "clients_data.json";
-      link.click();
-    }
-    render();
-  </script>
+    };
+    wrapper.appendChild(img);
+    wrapper.appendChild(delBtn);
+    container.appendChild(wrapper);
+  });
+  bindClientLogoClicks();
+}
+
+function bindClientLogoClicks() {
+  document.querySelectorAll(".client-logo").forEach((logo, index) => {
+    logo.onclick = () => showClientModal(index);
+  });
+}
+
+render();
+</script>
 <script>
 function openModal(type) {
   const modal = document.getElementById("modal");
@@ -374,7 +279,7 @@ function addCategory() {
   if (!clients[clientIndex].categories) clients[clientIndex].categories = [];
   clients[clientIndex].categories.push({ name: categoryName, procedures: [] });
   localStorage.setItem("clientsData", JSON.stringify(clients));
-  render();
+  render(); bindClientLogoClicks();
   closeModal();
 }
 
@@ -396,7 +301,7 @@ function addProcedure() {
 
   clients[clientIndex].categories[catIndex].procedures.push({ name, link });
   localStorage.setItem("clientsData", JSON.stringify(clients));
-  render();
+  render(); bindClientLogoClicks();
   closeModal();
 }
 
@@ -409,7 +314,7 @@ function importJSON(event) {
             try {
                 clients = JSON.parse(e.target.result);
                 localStorage.setItem("clientsData", JSON.stringify(clients));
-                render();
+                render(); bindClientLogoClicks();
                 alert("✅ Import réussi !");
             } catch (error) {
                 alert("❌ Erreur lors de l'import du fichier : " + error);
@@ -420,12 +325,6 @@ function importJSON(event) {
 }
 </script>
 
-<div class="modal" id="clientModal" style="display:none;">
-<div class="modal-content" id="clientModalContent" style="max-height: 80vh; overflow-y: auto;">
-<span class="close-btn" onclick="closeClientModal()">×</span>
-<div id="clientModalBody"></div>
-</div>
-</div>
 <script>
 function showClientModal(index) {
   const modal = document.getElementById("clientModal");
@@ -475,5 +374,48 @@ render = function() {
   originalRender();
   bindClientLogoClicks();
 };
+</script>
+<div class="modal" id="clientModal" style="display:none;">
+<div class="modal-content" id="clientModalContent" style="max-height: 80vh; overflow-y: auto;">
+<span class="close-btn" onclick="closeClientModal()">×</span>
+<div id="clientModalBody"></div>
+</div>
+</div>
+<script>
+function showClientModal(index) {
+  const modal = document.getElementById("clientModal");
+  const body = document.getElementById("clientModalBody");
+  const client = clients[index];
+  let html = "<h2 style='color:#58a6ff; text-align:center;'>" + client.name + "</h2>";
+  html += "<img src='" + client.logo + "' style='display:block; margin: 10px auto; width:80px;' />";
+  if (!client.categories || client.categories.length === 0) {
+    html += "<p style='text-align:center;'>Aucune catégorie.</p>";
+  } else {
+    client.categories.forEach((cat, catIdx) => {
+      html += "<div class='category'><h4>" + cat.name + "</h4>";
+      if (editing) {
+        html += "<button class='delete-btn' onclick='deleteCategory(" + index + "," + catIdx + ")'>🗑️</button>";
+      }
+      if (cat.procedures && cat.procedures.length > 0) {
+        cat.procedures.forEach((proc, pIdx) => {
+          html += "<div class='procedure'><a href='" + proc.link + "' target='_blank'>" + proc.name + "</a>";
+          if (editing) {
+            html += "<button class='delete-btn' onclick='deleteProcedure(" + index + "," + catIdx + "," + pIdx + ")'>🗑️</button>";
+          }
+          html += "</div>";
+        });
+      } else {
+        html += "<p style='margin-left:10px;'>Aucune procédure.</p>";
+      }
+      html += "</div>";
+    });
+  }
+  body.innerHTML = html;
+  modal.style.display = "block";
+}
+
+function closeClientModal() {
+  document.getElementById("clientModal").style.display = "none";
+}
 </script></body>
 </html>
