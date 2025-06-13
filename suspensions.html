@@ -1,44 +1,178 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Expédition : Suspensions Journalier</title>
+  <title>📋 Mail Fin de Journée – Suspensions</title>
   <style>
-    body { background-color: #121212; color: #e0f7fa; font-family: "Segoe UI", sans-serif; padding: 40px; }
-    h1 { color: #4fc3f7; }
-    input, textarea, select {
-      background-color: #1f1f1f;
+    body {
+      background-color: #121212;
+      color: #e0f7fa;
+      font-family: "Segoe UI", sans-serif;
+      padding: 40px;
+    }
+    h1 {
+      text-align: center;
+      color: #4fc3f7;
+      margin-bottom: 20px;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      background: #1f1f1f;
       color: white;
       border: 1px solid #4fc3f7;
       border-radius: 8px;
       padding: 10px;
-      width: 100%;
-      margin-bottom: 20px;
+      font-family: monospace;
+    }
+    .btn-row {
+      text-align: center;
+      margin-top: 20px;
     }
     button {
-      background-color: #1f1f1f;
+      background-color: #263238;
+      color: #4fc3f7;
       border: 1px solid #4fc3f7;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: #37474f;
+    }
+    #mail-output {
+      margin-top: 40px;
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: inset 0 0 8px #4fc3f7;
+      white-space: pre-wrap;
+    }
+    .mail-table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1e1e1e;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 12px rgba(79, 195, 247, 0.2);
+      color: white;
+    }
+    .mail-table th, .mail-table td {
+      padding: 10px;
+      border: 1px solid #4fc3f7;
+      text-align: center;
+    }
+    .mail-table th {
+      background-color: #263238;
+      color: #4fc3f7;
+      text-transform: uppercase;
+    }
+    #notif {
+      display:none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #263238;
       color: #4fc3f7;
       padding: 10px 20px;
       border-radius: 8px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #4fc3f7;
-      color: #121212;
+      box-shadow: 0 0 10px #4fc3f7;
+      font-size: 14px;
+      z-index: 999;
     }
   </style>
 </head>
+
 <body>
-  <h1>📋 Générateur de mail : Suspensions Journalier</h1>
-  <form>
-    <label>Client :</label>
-    <input type="text" placeholder="Nom du client" />
-    <label>Matériel :</label>
-    <textarea placeholder="Liste du matériel à expédier"></textarea>
-    <label>Adresse d’expédition :</label>
-    <textarea placeholder="Adresse complète"></textarea>
-    <button type="submit">Générer le mail</button>
-  </form>
+  <div style="margin-bottom: 20px; padding: 15px; border-radius: 8px; background-color: #1e293b;
+  color: #60a5fa; font-size: 14px; border: 1px solid #60a5fa; max-width: 800px; margin-left: auto; margin-right: auto;">
+    ⚠️ Ce générateur est uniquement destiné à informer la coordination et le RP de la situation des <strong>interventions PMU suspendues</strong>.
+  </div>
+
+  <h1>📋 Mail Fin de Journée – Suspensions PMU</h1>
+  <textarea id="codeInput" placeholder="Collez ici le ou les lignes Akuiteo..."></textarea>
+  <div class="btn-row">
+    <button onclick="generateMail()">📨 Générer</button>
+    <button onclick="copyMail()">📋 Copier</button>
+    <button onclick="exportHTML()">💾 HTML</button>
+  </div>
+
+  <div id="notif">✅ Mail copié !</div>
+  <div id="mail-output"></div>
+
+  <script>
+    function parseLine(line) {
+      const parts = line.split(';');
+      return {
+        akuiteo: parts[0] || '—',
+        site: parts[7] || '—',
+        ville: parts[10] || '—',
+        piece: parts[16] || '—',
+        technicien: parts[14] || 'Aucun technicien affecté'
+      };
+    }
+
+    function generateMail() {
+      const input = document.getElementById("codeInput").value.trim();
+      const lines = input.split('\n').filter(l => l.trim() !== '');
+      const rows = lines.map(parseLine);
+
+      let mail = `
+<div style="font-family: 'Segoe UI', sans-serif; color: white; line-height: 1.1;">
+  Bonjour Stéphanie,<br>
+  🔔 Voici le suivi des interventions suspendues à ce jour 😊<br>
+  📌 ${rows.length} intervention(s) enregistrées<br>
+  👷‍♂️ ${rows.filter(r => r.technicien !== 'Aucun technicien affecté').length} intervention(s) avec technicien affecté.<br>
+  ${
+    rows
+      .filter(r => r.technicien !== 'Aucun technicien affecté')
+      .map(r => `🔧 ${r.technicien} est affecté à l’intervention ${r.akuiteo} à ${r.ville}`)
+      .join('<br>')
+  }<br>
+  <table class="mail-table">
+    <thead>
+      <tr><th>📄 N° Akuiteo</th><th>🏢 Site</th><th>📍 Ville</th><th>🔩 Pièce</th><th>👨‍🔧 Technicien</th></tr>
+    </thead>
+    <tbody>
+      ${rows.map(r => `<tr><td>${r.akuiteo}</td><td>${r.site}</td><td>${r.ville}</td><td>${r.piece}</td><td>${r.technicien}</td></tr>`).join('')}
+    </tbody>
+  </table><br>
+  🤗 Très bonne fin de journée à vous.
+</div>`;
+      document.getElementById("mail-output").innerHTML = mail;
+    }
+
+    function copyMail() {
+      const content = document.getElementById('mail-output').innerHTML;
+      const blob = new Blob([content], { type: 'text/html' });
+      const data = [new ClipboardItem({ 'text/html': blob })];
+      navigator.clipboard.write(data).then(() => {
+        showNotif("✅ Mail copié !");
+      });
+    }
+
+    function exportHTML() {
+      const content = document.getElementById('mail-output').innerHTML;
+      const blob = new Blob([content], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "mail_suspensions.html";
+      a.click();
+      showNotif("💾 Export HTML prêt !");
+    }
+
+    function showNotif(text) {
+      const notif = document.getElementById("notif");
+      notif.textContent = text;
+      notif.style.display = "block";
+      setTimeout(() => { notif.style.display = "none"; }, 3000);
+    }
+  </script>
 </body>
 </html>
