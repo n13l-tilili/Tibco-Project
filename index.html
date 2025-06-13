@@ -303,13 +303,32 @@
     color: #bbb;
   }
 </style>
-</head>
+<style>
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background-color: #1e1e1e;
+  transition: transform 0.45s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.3s ease;
+  transform: translateX(0);
+  opacity: 1;
+}
+#sidebar.closed {
+  transform: translateX(-250px);
+  opacity: 0.5;
+}
+</style></head>
 <body>
+<img alt="Toggle Menu" id="logoToggleBtn" onclick="toggleSidebar()" src="https://i.ibb.co/Kc2hVR3X/1000003592-removebg-preview.png" style="position: fixed; top: 20px; left: 260px; height: 120px; z-index: 2000; cursor: pointer;
+            transition: transform 0.3s ease, left 0.45s cubic-bezier(0.4, 0.0, 0.2, 1);
+            filter: drop-shadow(0 0 10px #4fc3f7);"/>
 
-</div>
+
 <aside id="sidebar">
 <div class="sidebar-title">Outils Tibco Marseille</div>
-<button id="toggle" onclick="toggleSidebar()">☰</button>
+
 <button class="menu-btn" onclick="toggleMenu('mail')">📨 Générateur de mail</button>
 <div class="submenu" id="menu-mail">
 <a href="#" onclick="showSection('iframe-cti')">📦 Expédition : INTER CTI</a>
@@ -821,5 +840,23 @@ document.querySelectorAll('.menu a, .menu button').forEach(link => {
     if (welcome) welcome.style.display = 'none';
   });
 });
+</script><script>
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const logo = document.getElementById('logoToggleBtn');
+  const isClosed = sidebar.classList.contains('closed');
+
+  if (isClosed) {
+    sidebar.classList.remove('closed');
+    logo.style.left = '260px';
+  } else {
+    sidebar.classList.add('closed');
+    logo.style.left = '10px';
+  }
+}
+
+const logo = document.getElementById('logoToggleBtn');
+logo.onmouseover = () => logo.style.transform = 'scale(1.15)';
+logo.onmouseout = () => logo.style.transform = 'scale(1)';
 </script></body>
 </html>
