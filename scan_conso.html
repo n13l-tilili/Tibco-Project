@@ -1,10 +1,11 @@
 
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>📦 Scan Conso PMU</title>
-  <style>
+<meta charset="utf-8"/>
+<title>📦 Scan Conso PMU</title>
+<style>
     body {
       background-color: #121212;
       color: white;
@@ -77,109 +78,126 @@
       margin-top: 30px;
     }
   </style>
+<script>
+const catalogue = {'PMU-BID.0001.01': 'IDEMIA-UNITE CENTRALE', 'PMU-BID.0001.02': 'IDEMIA-SCANNER', 'PMU-BID.0001.03': 'IDEMIA-ECRAN OPERATEUR', 'PMU-BID.0001.04': 'IDEMIA-MODULE MONETIQUE', 'PMU-BID.0001.05': 'IDEMIA-ACCEPTEUR DE BILLETS', 'PMU-BID.0001.06': 'IDEMIA-ACCEPTEUR DE PIECES', 'PMU-BID.0001.07': 'IDEMIA-IMPRIMANTE', 'PMU-BID.0001.38': 'IDEMIA-ECRAN OPERATEUR NEXT GENE', 'PMU-BPM.0001.01': 'PMC-ALIMENTATION STAR 2060 A/A', 'PMU-BPM.0001.02': 'PMC-LECTEUR SCANNER', 'PMU-BPM.0001.03': 'PMC-CONFIG. ITRC STAR 2060', 'PMU-BPM.0001.04': 'PMC-ECRAN PREPOSE 2060', 'PMU-BPM.0001.05': 'PMC-ECRAN PREPOSE 2061', 'PMU-BPM.0001.06': 'PMC-ECRAN PREPOSE 2062', 'PMU-BPM.0001.07': 'PMC-ALARME STAR 2060', 'PMU-BPM.0001.08': 'PMC-ACCEPTEUR DE PIECES NRI', 'PMU-BPM.0001.09': 'PMC-ACCEPTEUR DE PIECES COMESTERO', 'PMU-BPM.0001.10': 'PMC-CHAUSSETTE', 'PMU-BPM.0001.100': 'PMC-IMP SANEI D39 160 FAV STAR 2070', 'PMU-BPM.0001.101': 'PMC-ACCEPTEUR DE PIECES COLIBRI', 'PMU-BPM.0001.102': 'PMC-ACCEPTEUR DE BILLETS POUR BORNE 2070', 'PMU-BPM.0001.103': 'PMC-CAISSE A BILLETS POUR BORNE 2070', 'PMU-BPM.0001.104': 'PMC-LECTEUR NFC MIFARE', 'PMU-BPM.0001.105': 'PMC-DONGLE USB 4G', 'PMU-BPM.0001.106': 'PMC-EQUIP MODULE WIFI STAR2070 PMU', 'PMU-BPM.0001.107': 'PMC-PAX-PINPAD PAX QV25', 'PMU-BPM.0001.11': 'PMC-BOITE A PIECES', 'PMU-BPM.0001.12': 'PMC-ACCEPTEUR DE BILLETS', 'PMU-BPM.0001.13': 'PMC-SUPPORT JCM', 'PMU-BPM.0001.14': 'PMC-CAISSE A BILLETS', 'PMU-BPM.0001.17': 'PMC-ENSEMBLE BAC UC 2060', 'PMU-BPM.0001.18': 'PMC-ENSEMBLE BAC UC 2061', 'PMU-BPM.0001.19': 'PMC-ENSEMBLE BAC UC 2062', 'PMU-BPM.0001.68': 'PMC-LIAISON BUC-CAB2 A/A 2', 'PMU-BPM.0001.79': 'PMC-IMPRIMANTE SANEI pour bornes 2062+', 'PMU-BPM.0001.81': 'PMC-TOLE LONGUE MONETIQ IPP350 2060/2061', 'PMU-BPM.0001.82': 'PMC-TOLE COURTE MONETIQUE PMR IPP350 2061 v3 / 2062 - 2062+', 'PMU-BPM.0001.87': 'PMC-ECRAN PREPOSE 2060/2061 sans LSC', 'PMU-BPM.0001.88': 'INGENICO-TPE IPP350', 'PMU-BPM.0001.96': 'PMC-BAC UC STAR 2070', 'PMU-BPM.0001.97': 'PMC-MODULE ALIMENTATION STAR 2070', 'PMU-BPM.0001.98': 'PMC-ECRAN BRN 2070 INNOLUX', 'PMU-BPM.0001.99': 'PMC-LECTEUR CODE BARRE', 'PMU-EQT.1500.01': 'PAX-PINPAD PAX S300', 'PMU-EQT.2000.01': 'AURES-EIPDV V1', 'PMU-EQT.2002.01': 'HEXAGLOBE-BOITIER OTT', 'PMU-EQT.2002.02': 'HEXAGLOBE-BOITIER OTT v2', 'PMU-EQT.2015.01': 'SAMSUNG-MONITEUR DM32E', 'PMU-EQT.2200.01': 'AURES-EIPDV V2', 'PMU-EQT.3700.01': 'SAGEM-TERMINAL S8', 'PMU-EQT.4200.01': 'PMC-BORNE 2070', 'PMU-TID.0000.01': 'IDEMIA-CAISSON TERMINAL S8', 'PMU-TID.0001.01': 'IDEMIA-MODULE OPTIQUE TERMINAL IDEMIA', 'PMU-TID.0001.02': 'IDEMIA-IMPRIMANTE TERMINAL IDEMIA', 'PMU-TID.0001.03': 'IDEMIA-ECRAN PREPOSE TERMINAL IDEMIA', 'PMU-TID.0001.04': 'IDEMIA-ECRAN CLIENT TERMINAL IDEMIA', 'PMU-TID.0002.01': 'IDEMIA-UNITE CENTRALE S8', 'PMU-TID.0002.02': 'IDEMIA-SCANNER S8', 'PMU-TID.0002.03': 'IDEMIA-IMPRIMANTE S8', 'PMU-TID.0002.04': 'IDEMIA-ECRAN OPERATEUR S8', 'PMU-TID.0002.05': 'IDEMIA-ECRAN JOUEUR S8', 'PMU-TID.0002.06': 'IDEMIA-ALIMENTATION S8', 'PMU-TPM.0001.01': 'PMC-MODULE CLIENT TERMINAL PMC', 'PMU-TPM.0001.02': 'PMC-ECRAN TERMINAL PMC', 'PMU-TPM.0001.03': 'PMC-LECTEUR PAR CAMERA TERMINAL PMC', 'PMU-TPM.0001.04': 'PMC-ALIMENTATION TERMINAL PMC', 'PMU-TPM.0001.05': 'PMC-IMPRIMANTE TERMINAL PMC', 'PMU-TPM.0001.06': 'PMC-BAC UC TERMINAL PMC', 'PMU-TPM.0002.00': 'PMC-CAISSON TERMINAL STAR 2020', 'PMU-TPM.0002.01': 'PMC-AFFICHEUR CLIENT 2020', 'PMU-TPM.0002.02': 'PMC-ALIMENTATION 2020', 'PMU-TPM.0002.03': 'PMC-BAC UNITE CENTRALE 2020', 'PMU-TPM.0002.04': 'PMC-ECRAN TITULAIRE 2020', 'PMU-TPM.0002.05': 'PMC-IMPRIMANTE 2020', 'PMU-TPM.0002.06': 'PMC-LECTEUR 2020', 'PMU-BID.0001.08': 'IDEMIA-CORDON LEDS ETAT BORNE', 'PMU-BID.0001.09': 'IDEMIA-CORDON RS232 CM - BILLETS JCM', 'PMU-BID.0001.10': 'IDEMIA-CORDON USB 1-B MONNAYEUR', 'PMU-BID.0001.11': 'IDEMIA-CORDON ALIM BILLETS JCM', 'PMU-BID.0001.12': 'IDEMIA-CORDON ALIM MONNAYEUR', 'PMU-BID.0001.13': 'IDEMIA-CORDON ECRAN OPERATEUR', 'PMU-BID.0001.14': 'IDEMIA-CORDON MDR26 SCANNER/UC', 'PMU-BID.0001.15': 'IDEMIA-CORDON RJ48 +24V 1.5M', 'PMU-BID.0001.16': 'IDEMIA-CORDON RJ45 BORNE', 'PMU-BID.0001.17': 'IDEMIA-CORDON SECTEUR', 'PMU-BID.0001.18': 'IDEMIA-CORDON ALIM 24V MONETIQUE', 'PMU-BID.0001.19': 'IDEMIA-CORDON USB TYPE B', 'PMU-BID.0001.20': 'IDEMIA-MULTIPRISE', 'PMU-BID.0001.21': 'IDEMIA-POIGNEE', 'PMU-BID.0001.22': 'IDEMIA-SERRURE PRINCIPALE (CLES ROUGES)', 'PMU-BID.0001.23': 'IDEMIA-VERIN', 'PMU-BID.0001.24': 'IDEMIA-BOUCHE SCANNER', 'PMU-BID.0001.25': 'IDEMIA-GUIDE TICKET IMPRIMANTE', 'PMU-BID.0001.26': 'IDEMIA-SEQUESTRE PIECES + SERRURE (CLES VERTE)', 'PMU-BID.0001.27': 'IDEMIA-CHARNIERE', 'PMU-BID.0001.28': 'IDEMIA-AIMANT', 'PMU-BID.0001.29': 'IDEMIA-CAPTEUR PORTE', 'PMU-BID.0001.30': "IDEMIA-TRINGLE D'OUVERTURE", 'PMU-BID.0001.31': 'IDEMIA-SEQUESTRE TICKET', 'PMU-BID.0001.32': 'IDEMIA-BOUTON MOLETTE SCAN/IMP/UC', 'PMU-BID.0001.33': 'IDEMIA-ECROU ECRAN / MONETIQUE', 'PMU-BID.0001.34': 'IDEMIA-CLE PASSE-PARTOUT BORNEO', 'PMU-BID.0001.35': 'IDEMIA-TRESSE DE MASSE BORNEO', 'PMU-BID.0001.36': 'IDEMIA-VIS AIMANTS BUTEES PORTE PRINCIPALE', 'PMU-BID.0001.37': 'IDEMIA-SEQUESTRE PIECES', 'PMU-BID.0001.39': 'TOLE INTEGRATION PINPAD PAX', 'PMU-BID.0001.40': 'IDEMIA-Kit Maintenance - Technicien', 'PMU-BID.0001.41': 'IDEMIA-Ecrou frein', 'PMU-BPM.0001.15': 'PMC-PORTE PRINCIPALE COMPLETE', 'PMU-BPM.0001.16': 'PMC-KIT PORTE MONETIQUE BASSE', 'PMU-BPM.0001.23': 'PMC-Support Kit CB IPP350', 'PMU-BPM.0001.24': 'PMC-Liaison Kit CB IPP350', 'PMU-BPM.0001.25': 'PMC-PALIER DROIT ECRAN NOIR', 'PMU-BPM.0001.26': 'PMC-PALIER GAUCHE ECRAN NOIR', 'PMU-BPM.0001.27': 'PMC-BOUTON BORNE', 'PMU-BPM.0001.28': 'PMC-SOCLE BORNE', 'PMU-BPM.0001.29': 'PMC-PORTE HTE MONETIQ PMR', 'PMU-BPM.0001.30': 'PMC-BAC SEQUESTRE V1', 'PMU-BPM.0001.31': 'PMC-BAC SEQUESTRE V2', 'PMU-BPM.0001.32': 'PMC-PORTE MONETIQUE HAUTE', 'PMU-BPM.0001.33': 'PMC-PORTE SOCLE STAR2060', 'PMU-BPM.0001.34': 'PMC-Col de cygne droit porte monétique haute', 'PMU-BPM.0001.35': 'PMC-Col de cygne gauche porte monétique haute', 'PMU-BPM.0001.36': 'PMC-CACHE VUE PORTE MONETIQUE', 'PMU-BPM.0001.37': 'PMC-SEBILE', 'PMU-BPM.0001.38': 'PMC-COL DE CYGNE PORTE MONETIQUE', 'PMU-BPM.0001.39': 'PMC-COL DE CYGNE ECRAN GAUCHE STAR2061', 'PMU-BPM.0001.40': 'PMC-COL DE CYGNE ECRAN DROIT STAR2061', 'PMU-BPM.0001.41': 'PMC-SERRURE', 'PMU-BPM.0001.42': 'PMC-GLISSIERE TELESCOPIQUE', 'PMU-BPM.0001.43': 'PMC-VERIN ECRAN', 'PMU-BPM.0001.44': 'PMC-VERIN PORTE MONETIQUE', 'PMU-BPM.0001.45': 'PMC-CLE PASSE-PARTOUT STAR 2060', 'PMU-BPM.0001.46': 'PMC-FIL DE TERRE ECRAN', 'PMU-BPM.0001.47': 'PMC-FIL DE TERRE A/B', 'PMU-BPM.0001.48': 'PMC-LIAISON JCM A/A', 'PMU-BPM.0001.49': 'PMC-REP BANDEAU SECTEUR', 'PMU-BPM.0001.50': 'PMC-SWITCH DETECTION PORTE', 'PMU-BPM.0001.51': 'PMC-LIAISON ETHERNET A/A', 'PMU-BPM.0001.52': 'PMC-LIAISON BUC-CAB2 A/A', 'PMU-BPM.0001.53': 'PMC-LIAISON ALIM-CAB2 A/A', 'PMU-BPM.0001.54': 'PMC-LIAISON SWITCH -CAB 2A/A', 'PMU-BPM.0001.55': 'PMC-LIAISON SWITCH MONETIQUE', 'PMU-BPM.0001.56': 'PMC-LIAISON USB G13/ BAC UC', 'PMU-BPM.0001.57': 'PMC-LI. ALIMENTATION G13 A/A', 'PMU-BPM.0001.58': 'PMC-LIAISON ALIMENTATION G13', 'PMU-BPM.0001.59': 'PMC-LIAISON BUC - JCM A/A', 'PMU-BPM.0001.60': 'PMC-CORDON SECTEUR "droit"', 'PMU-BPM.0001.61': 'PMC-LIAISON SWITCH -CAB 2A/A 2', 'PMU-BPM.0001.62': 'PMC-REP BANDEAU SECTEUR 2', 'PMU-BPM.0001.63': 'PMC-LIAISON SWITCH MONETIQUE 2', 'PMU-BPM.0001.64': 'PMC-LI BUC-USB RM A/A', 'PMU-BPM.0001.65': 'PMC-LI BUC-ALIM RM5 A/A', 'PMU-BPM.0001.66': 'PMC-FILTRE SECTEUR', 'PMU-BPM.0001.67': 'PMC-CORDON SECTEUR (COURT 1M) "coudé"', 'PMU-BPM.0001.70': 'PMC-ALIMENTATION KIT CB I9500', 'PMU-BPM.0001.71': 'PMC-KIT VISSERIE BORNE', 'PMU-BPM.0001.72': 'PMC-SUPPORT LECTEUR BORNE 206X', 'PMU-BPM.0001.73': 'PMC-SUPPORT ACCEPTEUR PIECE NRI', 'PMU-BPM.0001.74': 'PMC-SUPPORT ACCEPTEUR PIECE COMESTERO', 'PMU-BPM.0001.75': 'PMC-PLAQUE SUPPORT ACCEPTEUR PIECE RAL7040', 'PMU-BPM.0001.76': 'PATTES GAUCHE+DROITE VERROULLAGE MONETIQUE', 'PMU-BPM.0001.80': 'PMC-Câbles lecteurs sans contact vending pass Ecran borne', 'PMU-BPM.0001.83': 'PMC-TOLE LONGUE MONETIQ KIT I95', 'PMU-BPM.0001.84': 'PORTE HTE MONETIQ PMR PAX S300', 'PMU-BPM.0001.90': 'PMC-CAISSON BLOCAGE BUC', 'PMU-BPM.0001.91': 'PMC-BRIDE FAV IMP', 'PMU-BPM.0001.93': 'SUPPORT CABLE IMP2020 TEINTE', 'PMU-BPM.0001.94': 'PMC-BOBINE', 'PMU-BPM.0001.95': 'PMC-TICKETS DE JEUX', 'PMU-BPM.0001.109': 'PMC-CABLE RESEAU', 'PMU-CAB.0001.01': 'PMU-DISJONCTEUR MAGNETO THERMIQUE', 'PMU-CAB.0001.02': 'PMU-INTERRUPTEUR DIFFERENTIEL', 'PMU-CAB.0001.03': 'PMU-LIMITEUR DE SURTENSION', 'PMU-CAB.0001.04': 'PMU-REBOOT ROUTEUR', 'PMU-CAB.0001.05': 'PMU-PAIRE DE LIVEPLUG CPL', 'PMU-CAB.0001.06': 'PMU-INSERT RJ45', 'PMU-CAB.0001.07': 'PMU-TP_LINK', 'PMU-CAB.0001.08': 'A CREER dénomination', 'PMU-EIP.0001.01': 'EIPDV-ANTENNE WIFI', 'PMU-EIP.0001.02': 'EIPDV-HDD PMU', 'PMU-EIP.0001.03': 'EIPDV-ALIMENTATION', 'PMU-EIP.0001.04': 'BAC UC EIPDV V2', 'PMU-EIP.0001.05': 'EIPDV V2 ALIMENTATION', 'PMU-EIP.0001.06': 'OTT - CÂBLE ALIMENTATION MICRO USB', 'PMU-EQT.2009.01': 'EIPDV-SUPPORT TOTEM', 'PMU-MON.0001.01': 'TELECOMMANDE TV SAMSUNG', 'PMU-MON.0001.02': 'PMU-CAB-ALIM-ECRAN-SAMSUNG', 'PMU-PAX.0001.01': 'PAX- CABLE S300', 'PMU-TID.0001.05': 'IDEMIA-CABLE HDMI', 'PMU-TID.0001.06': 'IDEMIA-CABLE 24V', 'PMU-TID.0001.07': 'IDEMIA-CABLE USB', 'PMU-TID.0001.08': 'IDEMIA-CABLE ALIMENTATION PRINCIPAL', 'Ancien : PMU-TID.0001.09News : PMU-BID.0001.16': 'IDEMIA-CABLE RJ45', 'PMU-TID.0001.10': 'IDEMIA-CABLE RJ48 IMPRIMANTE', 'PMU-TID.0001.11': 'IDEMIA-TRAPPE ARRIERE', 'PMU-TPM.0001.07': 'PMC-CORDON SECTEUR NOIR 2.5M', 'PMU-TPM.0001.08': 'PMC-LI MODULE CLIENT STAR2031 A/A', 'PMU-TPM.0001.09': 'PMC-CABLE POWER USB B/A', 'PMU-TPM.0001.10': 'PMC-CAPOT MOBIL S2031 ASM TAUPE', 'PMU-TPM.0001.11': 'cache recepissé imprimante', 'PMU-TPM.0001.12': 'PMC-MODULE IHM POUR TERMINAUX 2031 (BOUTON ON/OFF)'};
+
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.textContent = message;
+  toast.style.position = 'fixed';
+  toast.style.bottom = '20px';
+  toast.style.left = '20px';
+  toast.style.padding = '12px 20px';
+  toast.style.backgroundColor = '#4fc3f7';
+  toast.style.color = '#121212';
+  toast.style.borderRadius = '10px';
+  toast.style.fontWeight = 'bold';
+  toast.style.boxShadow = '0 0 10px rgba(79, 195, 247, 0.6)';
+  toast.style.zIndex = 1000;
+  toast.style.opacity = 1;
+  document.body.appendChild(toast);
+  setTimeout(() => {
+    toast.style.transition = 'opacity 0.5s ease';
+    toast.style.opacity = 0;
+    setTimeout(() => toast.remove(), 500);
+  }, 2000);
+}
+
+function addItem() {
+  const ref = document.getElementById('ref').value.trim();
+  const qty = document.getElementById('qty').value.trim();
+  if (!catalogue[ref]) {
+    showToast('❌ Référence inconnue');
+    return;
+  }
+  if (ref && qty) {
+    const label = catalogue[ref];
+    const tbody = document.querySelector('#table tbody');
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><input type="text" value="${ref}" readonly></td>
+      <td><input type="text" value="${label}" readonly></td>
+      <td><input type="number" value="${qty}" onchange="updateValue(this)"></td>
+      <td><button onclick="this.closest('tr').remove()">❌</button></td>
+    `;
+    tbody.appendChild(row);
+    showToast('✅ ' + label);
+    document.getElementById('ref').value = '';
+    document.getElementById('qty').value = '';
+    document.getElementById('ref').focus();
+  }
+}
+</script>
 </head>
 <body>
-  <h1>📦 Scan Conso PMU</h1>
-  <div class="form-row">
-    <input type="text" id="ref" placeholder="Référence Tibco" autofocus />
-    <input type="number" id="qty" placeholder="Quantité" />
-    <button onclick="addItem()">➕ Ajouter</button>
-  </div>
-  <table id="table">
+<script>
+const catalogue = {'PMU-BID.0001.01': 'IDEMIA-UNITE CENTRALE', 'PMU-BID.0001.02': 'IDEMIA-SCANNER', 'PMU-BID.0001.03': 'IDEMIA-ECRAN OPERATEUR', 'PMU-BID.0001.04': 'IDEMIA-MODULE MONETIQUE', 'PMU-BID.0001.05': 'IDEMIA-ACCEPTEUR DE BILLETS', 'PMU-BID.0001.06': 'IDEMIA-ACCEPTEUR DE PIECES', 'PMU-BID.0001.07': 'IDEMIA-IMPRIMANTE', 'PMU-BID.0001.38': 'IDEMIA-ECRAN OPERATEUR NEXT GENE', 'PMU-BPM.0001.01': 'PMC-ALIMENTATION STAR 2060 A/A', 'PMU-BPM.0001.02': 'PMC-LECTEUR SCANNER', 'PMU-BPM.0001.03': 'PMC-CONFIG. ITRC STAR 2060', 'PMU-BPM.0001.04': 'PMC-ECRAN PREPOSE 2060', 'PMU-BPM.0001.05': 'PMC-ECRAN PREPOSE 2061', 'PMU-BPM.0001.06': 'PMC-ECRAN PREPOSE 2062', 'PMU-BPM.0001.07': 'PMC-ALARME STAR 2060', 'PMU-BPM.0001.08': 'PMC-ACCEPTEUR DE PIECES NRI', 'PMU-BPM.0001.09': 'PMC-ACCEPTEUR DE PIECES COMESTERO', 'PMU-BPM.0001.10': 'PMC-CHAUSSETTE', 'PMU-BPM.0001.100': 'PMC-IMP SANEI D39 160 FAV STAR 2070', 'PMU-BPM.0001.101': 'PMC-ACCEPTEUR DE PIECES COLIBRI', 'PMU-BPM.0001.102': 'PMC-ACCEPTEUR DE BILLETS POUR BORNE 2070', 'PMU-BPM.0001.103': 'PMC-CAISSE A BILLETS POUR BORNE 2070', 'PMU-BPM.0001.104': 'PMC-LECTEUR NFC MIFARE', 'PMU-BPM.0001.105': 'PMC-DONGLE USB 4G', 'PMU-BPM.0001.106': 'PMC-EQUIP MODULE WIFI STAR2070 PMU', 'PMU-BPM.0001.107': 'PMC-PAX-PINPAD PAX QV25', 'PMU-BPM.0001.11': 'PMC-BOITE A PIECES', 'PMU-BPM.0001.12': 'PMC-ACCEPTEUR DE BILLETS', 'PMU-BPM.0001.13': 'PMC-SUPPORT JCM', 'PMU-BPM.0001.14': 'PMC-CAISSE A BILLETS', 'PMU-BPM.0001.17': 'PMC-ENSEMBLE BAC UC 2060', 'PMU-BPM.0001.18': 'PMC-ENSEMBLE BAC UC 2061', 'PMU-BPM.0001.19': 'PMC-ENSEMBLE BAC UC 2062', 'PMU-BPM.0001.68': 'PMC-LIAISON BUC-CAB2 A/A 2', 'PMU-BPM.0001.79': 'PMC-IMPRIMANTE SANEI pour bornes 2062+', 'PMU-BPM.0001.81': 'PMC-TOLE LONGUE MONETIQ IPP350 2060/2061', 'PMU-BPM.0001.82': 'PMC-TOLE COURTE MONETIQUE PMR IPP350 2061 v3 / 2062 - 2062+', 'PMU-BPM.0001.87': 'PMC-ECRAN PREPOSE 2060/2061 sans LSC', 'PMU-BPM.0001.88': 'INGENICO-TPE IPP350', 'PMU-BPM.0001.96': 'PMC-BAC UC STAR 2070', 'PMU-BPM.0001.97': 'PMC-MODULE ALIMENTATION STAR 2070', 'PMU-BPM.0001.98': 'PMC-ECRAN BRN 2070 INNOLUX', 'PMU-BPM.0001.99': 'PMC-LECTEUR CODE BARRE', 'PMU-EQT.1500.01': 'PAX-PINPAD PAX S300', 'PMU-EQT.2000.01': 'AURES-EIPDV V1', 'PMU-EQT.2002.01': 'HEXAGLOBE-BOITIER OTT', 'PMU-EQT.2002.02': 'HEXAGLOBE-BOITIER OTT v2', 'PMU-EQT.2015.01': 'SAMSUNG-MONITEUR DM32E', 'PMU-EQT.2200.01': 'AURES-EIPDV V2', 'PMU-EQT.3700.01': 'SAGEM-TERMINAL S8', 'PMU-EQT.4200.01': 'PMC-BORNE 2070', 'PMU-TID.0000.01': 'IDEMIA-CAISSON TERMINAL S8', 'PMU-TID.0001.01': 'IDEMIA-MODULE OPTIQUE TERMINAL IDEMIA', 'PMU-TID.0001.02': 'IDEMIA-IMPRIMANTE TERMINAL IDEMIA', 'PMU-TID.0001.03': 'IDEMIA-ECRAN PREPOSE TERMINAL IDEMIA', 'PMU-TID.0001.04': 'IDEMIA-ECRAN CLIENT TERMINAL IDEMIA', 'PMU-TID.0002.01': 'IDEMIA-UNITE CENTRALE S8', 'PMU-TID.0002.02': 'IDEMIA-SCANNER S8', 'PMU-TID.0002.03': 'IDEMIA-IMPRIMANTE S8', 'PMU-TID.0002.04': 'IDEMIA-ECRAN OPERATEUR S8', 'PMU-TID.0002.05': 'IDEMIA-ECRAN JOUEUR S8', 'PMU-TID.0002.06': 'IDEMIA-ALIMENTATION S8', 'PMU-TPM.0001.01': 'PMC-MODULE CLIENT TERMINAL PMC', 'PMU-TPM.0001.02': 'PMC-ECRAN TERMINAL PMC', 'PMU-TPM.0001.03': 'PMC-LECTEUR PAR CAMERA TERMINAL PMC', 'PMU-TPM.0001.04': 'PMC-ALIMENTATION TERMINAL PMC', 'PMU-TPM.0001.05': 'PMC-IMPRIMANTE TERMINAL PMC', 'PMU-TPM.0001.06': 'PMC-BAC UC TERMINAL PMC', 'PMU-TPM.0002.00': 'PMC-CAISSON TERMINAL STAR 2020', 'PMU-TPM.0002.01': 'PMC-AFFICHEUR CLIENT 2020', 'PMU-TPM.0002.02': 'PMC-ALIMENTATION 2020', 'PMU-TPM.0002.03': 'PMC-BAC UNITE CENTRALE 2020', 'PMU-TPM.0002.04': 'PMC-ECRAN TITULAIRE 2020', 'PMU-TPM.0002.05': 'PMC-IMPRIMANTE 2020', 'PMU-TPM.0002.06': 'PMC-LECTEUR 2020', 'PMU-BID.0001.08': 'IDEMIA-CORDON LEDS ETAT BORNE', 'PMU-BID.0001.09': 'IDEMIA-CORDON RS232 CM - BILLETS JCM', 'PMU-BID.0001.10': 'IDEMIA-CORDON USB 1-B MONNAYEUR', 'PMU-BID.0001.11': 'IDEMIA-CORDON ALIM BILLETS JCM', 'PMU-BID.0001.12': 'IDEMIA-CORDON ALIM MONNAYEUR', 'PMU-BID.0001.13': 'IDEMIA-CORDON ECRAN OPERATEUR', 'PMU-BID.0001.14': 'IDEMIA-CORDON MDR26 SCANNER/UC', 'PMU-BID.0001.15': 'IDEMIA-CORDON RJ48 +24V 1.5M', 'PMU-BID.0001.16': 'IDEMIA-CORDON RJ45 BORNE', 'PMU-BID.0001.17': 'IDEMIA-CORDON SECTEUR', 'PMU-BID.0001.18': 'IDEMIA-CORDON ALIM 24V MONETIQUE', 'PMU-BID.0001.19': 'IDEMIA-CORDON USB TYPE B', 'PMU-BID.0001.20': 'IDEMIA-MULTIPRISE', 'PMU-BID.0001.21': 'IDEMIA-POIGNEE', 'PMU-BID.0001.22': 'IDEMIA-SERRURE PRINCIPALE (CLES ROUGES)', 'PMU-BID.0001.23': 'IDEMIA-VERIN', 'PMU-BID.0001.24': 'IDEMIA-BOUCHE SCANNER', 'PMU-BID.0001.25': 'IDEMIA-GUIDE TICKET IMPRIMANTE', 'PMU-BID.0001.26': 'IDEMIA-SEQUESTRE PIECES + SERRURE (CLES VERTE)', 'PMU-BID.0001.27': 'IDEMIA-CHARNIERE', 'PMU-BID.0001.28': 'IDEMIA-AIMANT', 'PMU-BID.0001.29': 'IDEMIA-CAPTEUR PORTE', 'PMU-BID.0001.30': "IDEMIA-TRINGLE D'OUVERTURE", 'PMU-BID.0001.31': 'IDEMIA-SEQUESTRE TICKET', 'PMU-BID.0001.32': 'IDEMIA-BOUTON MOLETTE SCAN/IMP/UC', 'PMU-BID.0001.33': 'IDEMIA-ECROU ECRAN / MONETIQUE', 'PMU-BID.0001.34': 'IDEMIA-CLE PASSE-PARTOUT BORNEO', 'PMU-BID.0001.35': 'IDEMIA-TRESSE DE MASSE BORNEO', 'PMU-BID.0001.36': 'IDEMIA-VIS AIMANTS BUTEES PORTE PRINCIPALE', 'PMU-BID.0001.37': 'IDEMIA-SEQUESTRE PIECES', 'PMU-BID.0001.39': 'TOLE INTEGRATION PINPAD PAX', 'PMU-BID.0001.40': 'IDEMIA-Kit Maintenance - Technicien', 'PMU-BID.0001.41': 'IDEMIA-Ecrou frein', 'PMU-BPM.0001.15': 'PMC-PORTE PRINCIPALE COMPLETE', 'PMU-BPM.0001.16': 'PMC-KIT PORTE MONETIQUE BASSE', 'PMU-BPM.0001.23': 'PMC-Support Kit CB IPP350', 'PMU-BPM.0001.24': 'PMC-Liaison Kit CB IPP350', 'PMU-BPM.0001.25': 'PMC-PALIER DROIT ECRAN NOIR', 'PMU-BPM.0001.26': 'PMC-PALIER GAUCHE ECRAN NOIR', 'PMU-BPM.0001.27': 'PMC-BOUTON BORNE', 'PMU-BPM.0001.28': 'PMC-SOCLE BORNE', 'PMU-BPM.0001.29': 'PMC-PORTE HTE MONETIQ PMR', 'PMU-BPM.0001.30': 'PMC-BAC SEQUESTRE V1', 'PMU-BPM.0001.31': 'PMC-BAC SEQUESTRE V2', 'PMU-BPM.0001.32': 'PMC-PORTE MONETIQUE HAUTE', 'PMU-BPM.0001.33': 'PMC-PORTE SOCLE STAR2060', 'PMU-BPM.0001.34': 'PMC-Col de cygne droit porte monétique haute', 'PMU-BPM.0001.35': 'PMC-Col de cygne gauche porte monétique haute', 'PMU-BPM.0001.36': 'PMC-CACHE VUE PORTE MONETIQUE', 'PMU-BPM.0001.37': 'PMC-SEBILE', 'PMU-BPM.0001.38': 'PMC-COL DE CYGNE PORTE MONETIQUE', 'PMU-BPM.0001.39': 'PMC-COL DE CYGNE ECRAN GAUCHE STAR2061', 'PMU-BPM.0001.40': 'PMC-COL DE CYGNE ECRAN DROIT STAR2061', 'PMU-BPM.0001.41': 'PMC-SERRURE', 'PMU-BPM.0001.42': 'PMC-GLISSIERE TELESCOPIQUE', 'PMU-BPM.0001.43': 'PMC-VERIN ECRAN', 'PMU-BPM.0001.44': 'PMC-VERIN PORTE MONETIQUE', 'PMU-BPM.0001.45': 'PMC-CLE PASSE-PARTOUT STAR 2060', 'PMU-BPM.0001.46': 'PMC-FIL DE TERRE ECRAN', 'PMU-BPM.0001.47': 'PMC-FIL DE TERRE A/B', 'PMU-BPM.0001.48': 'PMC-LIAISON JCM A/A', 'PMU-BPM.0001.49': 'PMC-REP BANDEAU SECTEUR', 'PMU-BPM.0001.50': 'PMC-SWITCH DETECTION PORTE', 'PMU-BPM.0001.51': 'PMC-LIAISON ETHERNET A/A', 'PMU-BPM.0001.52': 'PMC-LIAISON BUC-CAB2 A/A', 'PMU-BPM.0001.53': 'PMC-LIAISON ALIM-CAB2 A/A', 'PMU-BPM.0001.54': 'PMC-LIAISON SWITCH -CAB 2A/A', 'PMU-BPM.0001.55': 'PMC-LIAISON SWITCH MONETIQUE', 'PMU-BPM.0001.56': 'PMC-LIAISON USB G13/ BAC UC', 'PMU-BPM.0001.57': 'PMC-LI. ALIMENTATION G13 A/A', 'PMU-BPM.0001.58': 'PMC-LIAISON ALIMENTATION G13', 'PMU-BPM.0001.59': 'PMC-LIAISON BUC - JCM A/A', 'PMU-BPM.0001.60': 'PMC-CORDON SECTEUR "droit"', 'PMU-BPM.0001.61': 'PMC-LIAISON SWITCH -CAB 2A/A 2', 'PMU-BPM.0001.62': 'PMC-REP BANDEAU SECTEUR 2', 'PMU-BPM.0001.63': 'PMC-LIAISON SWITCH MONETIQUE 2', 'PMU-BPM.0001.64': 'PMC-LI BUC-USB RM A/A', 'PMU-BPM.0001.65': 'PMC-LI BUC-ALIM RM5 A/A', 'PMU-BPM.0001.66': 'PMC-FILTRE SECTEUR', 'PMU-BPM.0001.67': 'PMC-CORDON SECTEUR (COURT 1M) "coudé"', 'PMU-BPM.0001.70': 'PMC-ALIMENTATION KIT CB I9500', 'PMU-BPM.0001.71': 'PMC-KIT VISSERIE BORNE', 'PMU-BPM.0001.72': 'PMC-SUPPORT LECTEUR BORNE 206X', 'PMU-BPM.0001.73': 'PMC-SUPPORT ACCEPTEUR PIECE NRI', 'PMU-BPM.0001.74': 'PMC-SUPPORT ACCEPTEUR PIECE COMESTERO', 'PMU-BPM.0001.75': 'PMC-PLAQUE SUPPORT ACCEPTEUR PIECE RAL7040', 'PMU-BPM.0001.76': 'PATTES GAUCHE+DROITE VERROULLAGE MONETIQUE', 'PMU-BPM.0001.80': 'PMC-Câbles lecteurs sans contact vending pass Ecran borne', 'PMU-BPM.0001.83': 'PMC-TOLE LONGUE MONETIQ KIT I95', 'PMU-BPM.0001.84': 'PORTE HTE MONETIQ PMR PAX S300', 'PMU-BPM.0001.90': 'PMC-CAISSON BLOCAGE BUC', 'PMU-BPM.0001.91': 'PMC-BRIDE FAV IMP', 'PMU-BPM.0001.93': 'SUPPORT CABLE IMP2020 TEINTE', 'PMU-BPM.0001.94': 'PMC-BOBINE', 'PMU-BPM.0001.95': 'PMC-TICKETS DE JEUX', 'PMU-BPM.0001.109': 'PMC-CABLE RESEAU', 'PMU-CAB.0001.01': 'PMU-DISJONCTEUR MAGNETO THERMIQUE', 'PMU-CAB.0001.02': 'PMU-INTERRUPTEUR DIFFERENTIEL', 'PMU-CAB.0001.03': 'PMU-LIMITEUR DE SURTENSION', 'PMU-CAB.0001.04': 'PMU-REBOOT ROUTEUR', 'PMU-CAB.0001.05': 'PMU-PAIRE DE LIVEPLUG CPL', 'PMU-CAB.0001.06': 'PMU-INSERT RJ45', 'PMU-CAB.0001.07': 'PMU-TP_LINK', 'PMU-CAB.0001.08': 'A CREER dénomination', 'PMU-EIP.0001.01': 'EIPDV-ANTENNE WIFI', 'PMU-EIP.0001.02': 'EIPDV-HDD PMU', 'PMU-EIP.0001.03': 'EIPDV-ALIMENTATION', 'PMU-EIP.0001.04': 'BAC UC EIPDV V2', 'PMU-EIP.0001.05': 'EIPDV V2 ALIMENTATION', 'PMU-EIP.0001.06': 'OTT - CÂBLE ALIMENTATION MICRO USB', 'PMU-EQT.2009.01': 'EIPDV-SUPPORT TOTEM', 'PMU-MON.0001.01': 'TELECOMMANDE TV SAMSUNG', 'PMU-MON.0001.02': 'PMU-CAB-ALIM-ECRAN-SAMSUNG', 'PMU-PAX.0001.01': 'PAX- CABLE S300', 'PMU-TID.0001.05': 'IDEMIA-CABLE HDMI', 'PMU-TID.0001.06': 'IDEMIA-CABLE 24V', 'PMU-TID.0001.07': 'IDEMIA-CABLE USB', 'PMU-TID.0001.08': 'IDEMIA-CABLE ALIMENTATION PRINCIPAL', 'Ancien : PMU-TID.0001.09News : PMU-BID.0001.16': 'IDEMIA-CABLE RJ45', 'PMU-TID.0001.10': 'IDEMIA-CABLE RJ48 IMPRIMANTE', 'PMU-TID.0001.11': 'IDEMIA-TRAPPE ARRIERE', 'PMU-TPM.0001.07': 'PMC-CORDON SECTEUR NOIR 2.5M', 'PMU-TPM.0001.08': 'PMC-LI MODULE CLIENT STAR2031 A/A', 'PMU-TPM.0001.09': 'PMC-CABLE POWER USB B/A', 'PMU-TPM.0001.10': 'PMC-CAPOT MOBIL S2031 ASM TAUPE', 'PMU-TPM.0001.11': 'cache recepissé imprimante', 'PMU-TPM.0001.12': 'PMC-MODULE IHM POUR TERMINAUX 2031 (BOUTON ON/OFF)'};
+</script>
+<h1>📦 Scan Conso PMU</h1><div style="background-color: #1e1e1e; color: #4fc3f7; padding: 16px 24px; margin: 20px auto 40px auto; border-radius: 10px; max-width: 900px; text-align: center; font-size: 16px; box-shadow: 0 0 10px rgba(79, 195, 247, 0.3);">ℹ️ Cette page est dédiée aux pièces PMU sérialisées ou non sérialisées. Elle est utilisée principalement pour effectuer des commandes de consommables.</div>
+<div class="form-row">
+<input autofocus="" id="ref" placeholder="Référence Tibco" type="text"/>
+<input id="qty" placeholder="Quantité" type="number"/>
+<button onclick="addItem()">➕ Ajouter</button>
+</div>
+<table id="table">
+<thead>
+<tr><th>Référence</th><th>Désignation</th><th>Quantité</th><th>🗑️</th></tr>
+</thead>
+<tbody></tbody>
+</table>
+<div class="export-zone">
+<button onclick="exportExcel()">📊 Exporter en Excel</button>
+<button onclick="exportHTML()">💾 Exporter en HTML</button>
+</div>
+<script>
+function exportHTML() {
+  const rows = Array.from(document.querySelectorAll('#table tbody tr'));
+  let html = `<table style="width: 100%; border-collapse: collapse; font-family: 'Segoe UI', sans-serif; background-color: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 0 12px rgba(79, 195, 247, 0.2); color: white;">
     <thead>
-      <tr>
-        <th>Référence</th>
-        <th>Quantité</th>
-        <th>🗑️</th>
+      <tr style="background-color: #263238; color: #4fc3f7; text-transform: uppercase;">
+        <th style="padding: 14px; border: 1px solid #4fc3f7;">Référence</th>
+        <th style="padding: 14px; border: 1px solid #4fc3f7;">Désignation</th>
+        <th style="padding: 14px; border: 1px solid #4fc3f7;">Quantité</th>
       </tr>
     </thead>
-    <tbody></tbody>
-  </table>
-  <div class="export-zone">
-    <button onclick="exportExcel()">📊 Exporter en Excel</button>
-    <button onclick="exportHTML()">💾 Exporter en HTML</button>
-  </div>
+    <tbody>`;
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td input');
+    const ref = cells[0].value;
+    const label = cells[1].value;
+    const qty = cells[2].value;
+    html += `<tr>
+      <td style='padding: 14px; border: 1px solid #4fc3f7; text-align: center;'>${ref}</td>
+      <td style='padding: 14px; border: 1px solid #4fc3f7; text-align: center;'>${label}</td>
+      <td style='padding: 14px; border: 1px solid #4fc3f7; text-align: center;'>${qty}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'scan_conso.html';
+  a.click();
+}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+function exportExcel() {
+  const rows = Array.from(document.querySelectorAll('#table tbody tr')).map(row => {
+    const inputs = row.querySelectorAll('td input');
+    return {
+      "Référence": inputs[0].value,
+      "Désignation": inputs[1].value,
+      "Quantité": inputs[2].value
+    };
+  });
 
-  <script>
-    function addItem() {
-      const ref = document.getElementById('ref').value.trim();
-      const qty = document.getElementById('qty').value.trim();
-      if (ref && qty) {
-        const tbody = document.querySelector('#table tbody');
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td><input type="text" value="${ref}" onchange="updateValue(this)"></td>
-          <td><input type="number" value="${qty}" onchange="updateValue(this)"></td>
-          <td><button onclick="this.closest('tr').remove()">❌</button></td>
-        `;
-        tbody.appendChild(row);
-        document.getElementById('ref').value = '';
-        document.getElementById('qty').value = '';
-        document.getElementById('ref').focus();
-      }
-    }
-
-    function exportHTML() {
-      const rows = Array.from(document.querySelectorAll('#table tbody tr'));
-      let html = `<table style="width: 100%; border-collapse: collapse; font-family: 'Segoe UI', sans-serif; background-color: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 0 12px rgba(79, 195, 247, 0.2); color: white;">
-        <thead>
-          <tr style="background-color: #263238; color: #4fc3f7; text-transform: uppercase;">
-            <th style="padding: 14px; border: 1px solid #4fc3f7;">Référence</th>
-            <th style="padding: 14px; border: 1px solid #4fc3f7;">Quantité</th>
-          </tr>
-        </thead>
-        <tbody>`;
-      rows.forEach(row => {
-        const cells = row.querySelectorAll('td input');
-        const ref = cells[0].value;
-        const qty = cells[1].value;
-        html += `<tr>
-          <td style='padding: 14px; border: 1px solid #4fc3f7; text-align: center;'>${ref}</td>
-          <td style='padding: 14px; border: 1px solid #4fc3f7; text-align: center;'>${qty}</td>
-        </tr>`;
-      });
-      html += '</tbody></table>';
-      const blob = new Blob([html], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'scan_conso.html';
-      a.click();
-    }
-  
-    function exportExcel() {
-      const rows = Array.from(document.querySelectorAll('#table tbody tr'));
-      let csv = "Référence,Quantité\n";
-      rows.forEach(row => {
-        const ref = row.querySelectorAll('td input')[0].value;
-        const qty = row.querySelectorAll('td input')[1].value;
-        csv += `"${ref}","${qty}"\n`;
-      });
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'scan_conso_export.csv';
-      a.click();
-    }
-    </script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script>
-    function exportExcel() {
-      const rows = Array.from(document.querySelectorAll('#table tbody tr')).map(row => {
-        const inputs = row.querySelectorAll('td input');
-        return {
-          "Référence": inputs[0].value,
-          "Quantité": inputs[1].value
-        };
-      });
-
-      const worksheet = XLSX.utils.json_to_sheet(rows);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "ScanConso");
-      XLSX.writeFile(workbook, "scan_conso_export.xlsx");
-    }
-  </script>
+  const worksheet = XLSX.utils.json_to_sheet(rows);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "ScanConso");
+  XLSX.writeFile(workbook, "scan_conso_export.xlsx");
+}
+</script>
 </body>
 </html>
