@@ -1,68 +1,184 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Scan Conso PMU</title>
+  <meta charset="UTF-8" />
+  <title>📦 Scan Conso PMU</title>
   <style>
-    body { background-color: #121212; color: white; font-family: "Segoe UI", sans-serif; padding: 40px; }
-    h1 { color: #4fc3f7; }
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 40px;
+    }
+    h1 {
+      color: #4fc3f7;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .form-row {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
     input[type="text"], input[type="number"] {
-      padding: 10px;
-      border-radius: 8px;
+      padding: 12px;
+      border-radius: 10px;
       border: 1px solid #4fc3f7;
       background-color: #1f1f1f;
       color: white;
-      margin-bottom: 10px;
-      width: 100%;
+      font-size: 15px;
+      width: 220px;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      background-color: #1e1e1e;
-    }
-    th, td {
-      padding: 10px;
-      border: 1px solid #4fc3f7;
-    }
-    th { background-color: #263238; }
     button {
-      background-color: #1f1f1f;
-      border: 1px solid #4fc3f7;
-      color: #4fc3f7;
-      padding: 10px 20px;
-      border-radius: 8px;
-      margin-top: 10px;
+      padding: 12px 20px;
+      background-color: #4fc3f7;
+      border: none;
+      border-radius: 10px;
+      color: black;
+      font-weight: bold;
       cursor: pointer;
+      transition: 0.3s;
     }
     button:hover {
-      background-color: #4fc3f7;
-      color: #121212;
+      background-color: #32b0df;
+    }
+    table {
+      width: 80%;
+      margin: auto;
+      border-collapse: collapse;
+      background-color: #1e1e1e;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 12px rgba(79, 195, 247, 0.2);
+    }
+    th, td {
+      padding: 14px;
+      border: 1px solid #4fc3f7;
+      text-align: center;
+    }
+    th {
+      background-color: #263238;
+      color: #4fc3f7;
+      text-transform: uppercase;
+    }
+    td input {
+      background: transparent;
+      border: none;
+      color: white;
+      text-align: center;
+      font-size: 14px;
+      width: 100%;
+    }
+    .export-zone {
+      text-align: center;
+      margin-top: 30px;
     }
   </style>
 </head>
 <body>
   <h1>📦 Scan Conso PMU</h1>
-  <input type="text" id="ref" placeholder="Référence Tibco">
-  <input type="number" id="qty" placeholder="Quantité">
-  <button onclick="addItem()">Ajouter</button>
+  <div class="form-row">
+    <input type="text" id="ref" placeholder="Référence Tibco" autofocus />
+    <input type="number" id="qty" placeholder="Quantité" />
+    <button onclick="addItem()">➕ Ajouter</button>
+  </div>
   <table id="table">
     <thead>
-      <tr><th>Référence</th><th>Quantité</th></tr>
+      <tr>
+        <th>Référence</th>
+        <th>Quantité</th>
+        <th>🗑️</th>
+      </tr>
     </thead>
     <tbody></tbody>
   </table>
+  <div class="export-zone">
+    <button onclick="exportExcel()">📊 Exporter en Excel</button>
+    <button onclick="exportHTML()">💾 Exporter en HTML</button>
+  </div>
+
   <script>
     function addItem() {
-      const ref = document.getElementById("ref").value;
-      const qty = document.getElementById("qty").value;
+      const ref = document.getElementById('ref').value.trim();
+      const qty = document.getElementById('qty').value.trim();
       if (ref && qty) {
-        const row = document.createElement("tr");
-        row.innerHTML = `<td>${ref}</td><td>${qty}</td>`;
-        document.querySelector("#table tbody").appendChild(row);
-        document.getElementById("ref").value = "";
-        document.getElementById("qty").value = "";
+        const tbody = document.querySelector('#table tbody');
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><input type="text" value="${ref}" onchange="updateValue(this)"></td>
+          <td><input type="number" value="${qty}" onchange="updateValue(this)"></td>
+          <td><button onclick="this.closest('tr').remove()">❌</button></td>
+        `;
+        tbody.appendChild(row);
+        document.getElementById('ref').value = '';
+        document.getElementById('qty').value = '';
+        document.getElementById('ref').focus();
       }
+    }
+
+    function exportHTML() {
+      const rows = Array.from(document.querySelectorAll('#table tbody tr'));
+      let html = `<table style="width: 100%; border-collapse: collapse; font-family: 'Segoe UI', sans-serif; background-color: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 0 12px rgba(79, 195, 247, 0.2); color: white;">
+        <thead>
+          <tr style="background-color: #263238; color: #4fc3f7; text-transform: uppercase;">
+            <th style="padding: 14px; border: 1px solid #4fc3f7;">Référence</th>
+            <th style="padding: 14px; border: 1px solid #4fc3f7;">Quantité</th>
+          </tr>
+        </thead>
+        <tbody>`;
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('td input');
+        const ref = cells[0].value;
+        const qty = cells[1].value;
+        html += `<tr>
+          <td style='padding: 14px; border: 1px solid #4fc3f7; text-align: center;'>${ref}</td>
+          <td style='padding: 14px; border: 1px solid #4fc3f7; text-align: center;'>${qty}</td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'scan_conso.html';
+      a.click();
+    }
+  
+    function exportExcel() {
+      const rows = Array.from(document.querySelectorAll('#table tbody tr'));
+      let csv = "Référence,Quantité\n";
+      rows.forEach(row => {
+        const ref = row.querySelectorAll('td input')[0].value;
+        const qty = row.querySelectorAll('td input')[1].value;
+        csv += `"${ref}","${qty}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'scan_conso_export.csv';
+      a.click();
+    }
+    </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    function exportExcel() {
+      const rows = Array.from(document.querySelectorAll('#table tbody tr')).map(row => {
+        const inputs = row.querySelectorAll('td input');
+        return {
+          "Référence": inputs[0].value,
+          "Quantité": inputs[1].value
+        };
+      });
+
+      const worksheet = XLSX.utils.json_to_sheet(rows);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "ScanConso");
+      XLSX.writeFile(workbook, "scan_conso_export.xlsx");
     }
   </script>
 </body>
