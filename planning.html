@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -12,7 +11,6 @@
       color: #fff;
       font-family: 'Segoe UI', sans-serif;
     }
-
     h1 {
       text-align: center;
       margin: 30px 0 10px;
@@ -20,7 +18,11 @@
       color: #00d4ff;
       text-shadow: 0 0 8px #00d4ff88;
     }
-
+    #editToggle {
+      cursor: pointer;
+      font-size: 0.7em;
+      margin-left: 12px;
+    }
     .presence-summary {
       background: #111;
       max-width: 900px;
@@ -30,26 +32,22 @@
       box-shadow: 0 0 12px #00d4ff44;
       margin-bottom: 30px;
     }
-
     .presence-summary h2 {
       text-align: center;
       color: #00d4ff;
       margin-bottom: 12px;
     }
-
     .presence-summary ul {
       list-style: none;
       padding: 0;
       margin: 0;
       text-align: center;
     }
-
     .presence-summary li {
       padding: 6px 0;
       font-size: 1.1em;
       border-bottom: 1px solid #ffffff11;
     }
-
     .planning-container {
       max-width: 1200px;
       margin: auto;
@@ -58,7 +56,6 @@
       border-radius: 20px;
       box-shadow: 0 0 20px #00d4ff22;
     }
-
     table {
       width: 100%;
       border-collapse: separate;
@@ -66,51 +63,52 @@
       border-radius: 16px;
       overflow: hidden;
     }
-
     th, td {
       border: 1px solid #333;
       padding: 12px;
       text-align: center;
     }
-
     th {
       background-color: #1a1a1a;
       color: #00d4ff;
       font-weight: 600;
     }
-
     td {
       background-color: #1b1b1b;
+      position: relative;
     }
-
     .glow {
       background-color: #2c3e50;
       box-shadow: 0 0 12px #00d4ffcc;
       border: 1px solid #00d4ff;
     }
-
     .day-off {
       background-color: #2a2a2a !important;
       color: #888;
       font-style: italic;
     }
-
-    input[type="text"], input[type="time"] {
-      background-color: #1a1a1a;
-      color: white;
-      border: none;
-      padding: 6px;
-      border-radius: 6px;
-      width: 90%;
-      text-align: center;
+    .editable {
+      display: none;
     }
-
-    .button-row {
+    .edit-only {
+      display: none;
+    }
+    .add-row-btn {
+      cursor: pointer;
+      font-size: 1.5em;
+      text-align: center;
+      color: #00d4ff;
+      transition: 0.3s;
+    }
+    .add-row-btn:hover {
+      color: #00b8e6;
+      text-shadow: 0 0 8px #00d4ff;
+    }
+    .buttons {
       text-align: center;
       margin-top: 20px;
     }
-
-    .button-row button {
+    .buttons button {
       background-color: #00d4ff;
       color: #000;
       font-weight: bold;
@@ -121,16 +119,21 @@
       cursor: pointer;
       transition: 0.3s;
     }
-
-    .button-row button:hover {
+    .buttons button:hover {
       background-color: #00b0d6;
+    }
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .no-print { display: none !important; }
+      input { display: none !important; }
+      .editable { display: none !important; }
     }
   </style>
 </head>
 <body>
-  <h1>📅 Planning des Techniciens</h1>
+  <h1 class="no-print">📅 Planning des Techniciens <span id="editToggle">✏️</span></h1>
 
-  <div class="presence-summary">
+  <div class="presence-summary no-print">
     <h2>📍 Présents ce Mardi</h2>
     <ul id="todayList"><li>Chargement...</li></ul>
   </div>
@@ -144,34 +147,55 @@
         </tr>
       </thead>
       <tbody></tbody>
+      <tfoot>
+        <tr class="add-row-btn no-print edit-only"><td colspan="8" onclick="addRow()">➕ Ajouter un technicien</td></tr>
+      </tfoot>
     </table>
+  </div>
 
-    <div class="button-row">
-      <button onclick="addRow()">➕ Ajouter un technicien</button>
-      <button onclick="exportJSON()">💾 Exporter en JSON</button>
-    </div>
+  <div class="buttons no-print">
+    <button onclick="window.print()">🖨️ Imprimer le planning</button>
+    <button onclick="exportJSON()" class="edit-only">💾 Exporter en JSON</button>
   </div>
 
 <script>
   const todayIndex = 1;
+  let editMode = false;
+
+  function toggleEdit() {
+    editMode = !editMode;
+    document.querySelectorAll(".editable").forEach(el => {
+      el.style.display = editMode ? "block" : "none";
+    });
+    document.querySelectorAll(".edit-only").forEach(el => {
+      el.style.display = editMode ? "inline-block" : "none";
+    });
+    if (!editMode) updateTodayPresence();
+  }
 
   function addRow(nom = "", horaires = []) {
+  const isEdit = editMode;
+
     const row = document.createElement("tr");
-    let html = `<td><input type="text" value="${nom}" placeholder="Technicien"></td>`;
+    let html = '<td><div class="editable"><input type="text" value="'+nom+'" placeholder="Technicien"></div><span class="readonly">'+nom+'</span></td>';
     for (let i = 0; i < 7; i++) {
-      const start = horaires[i]?.[0] || "";
-      const end = horaires[i]?.[1] || "";
+      const start = (horaires[i] && horaires[i][0]) || "";
+      const end = (horaires[i] && horaires[i][1]) || "";
+      const showText = (start && end) ? start + " → " + end : "REPOS";
       const isToday = i === todayIndex;
       const glow = (isToday && start && end) ? "glow" : "";
       const dayoff = (!start && !end) ? "day-off" : "";
-      html += `<td class="${glow || dayoff}">
-        <input type="time" value="${start}" placeholder="REPOS"> à 
-        <input type="time" value="${end}" placeholder="REPOS">
-      </td>`;
+      html += '<td class="' + (glow || dayoff) + '"><div class="editable"><input type="time" value="'+start+'"> à <input type="time" value="'+end+'"></div><span class="readonly">'+showText+'</span></td>';
     }
     row.innerHTML = html;
     document.querySelector("#planningTable tbody").appendChild(row);
-    attachListeners();
+if (isEdit) {
+  row.querySelectorAll(".editable").forEach(el => el.style.display = "block");
+  row.querySelectorAll(".readonly").forEach(el => el.style.display = "none");
+} else {
+  row.querySelectorAll(".editable").forEach(el => el.style.display = "none");
+  row.querySelectorAll(".readonly").forEach(el => el.style.display = "inline");
+}
     updateTodayPresence();
   }
 
@@ -180,14 +204,15 @@
     list.innerHTML = "";
     let found = false;
     document.querySelectorAll("#planningTable tbody tr").forEach(row => {
-      const name = row.querySelector("input[type='text']").value;
+      const nameInput = row.querySelector("input[type='text']");
+      const name = nameInput ? nameInput.value : "Technicien";
       const cell = row.querySelectorAll("td")[todayIndex + 1];
       const inputs = cell.querySelectorAll("input");
       if (inputs.length === 2 && inputs[0].value && inputs[1].value) {
         const start = inputs[0].value;
         const end = inputs[1].value;
         const li = document.createElement("li");
-        li.innerHTML = `<strong>${name}</strong> : ${start} → ${end}`;
+        li.innerHTML = "<strong>" + name + "</strong> : " + start + " → " + end;
         list.appendChild(li);
         cell.classList.add("glow");
         cell.classList.remove("day-off");
@@ -221,18 +246,13 @@
     URL.revokeObjectURL(url);
   }
 
-  function attachListeners() {
-    document.querySelectorAll("input").forEach(input => {
-      input.removeEventListener("input", updateTodayPresence);
-      input.addEventListener("input", updateTodayPresence);
-    });
-  }
-
+  document.getElementById("editToggle").addEventListener("click", toggleEdit);
   window.addEventListener("DOMContentLoaded", () => {
     addRow("MAMY", [["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["",""],["",""]]);
     addRow("HICHEM", [["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["",""],["",""]]);
     addRow("MEHDI", [["","",""],["","",""],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"]]);
     addRow("SEBASTIEN", [["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["",""],["",""]]);
+    document.querySelectorAll(".edit-only").forEach(el => el.style.display = "none");
   });
 </script>
 </body>
