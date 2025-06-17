@@ -2,181 +2,238 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Planning Techniciens</title>
   <style>
     body {
       margin: 0;
+      background-color: #000;
+      color: #fff;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #1e1e1e;
-      color: #ffffff;
     }
 
     h1 {
       text-align: center;
-      color: #4fc3f7;
-      margin-top: 30px;
+      margin: 30px 0 10px;
+      font-size: 2.5em;
+      color: #00d4ff;
+      text-shadow: 0 0 8px #00d4ff88;
+    }
+
+    .presence-summary {
+      background: #111;
+      max-width: 900px;
+      margin: auto;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 0 12px #00d4ff44;
+      margin-bottom: 30px;
+    }
+
+    .presence-summary h2 {
+      text-align: center;
+      color: #00d4ff;
+      margin-bottom: 12px;
+    }
+
+    .presence-summary ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      text-align: center;
+    }
+
+    .presence-summary li {
+      padding: 6px 0;
+      font-size: 1.1em;
+      border-bottom: 1px solid #ffffff11;
     }
 
     .planning-container {
       max-width: 1200px;
-      margin: 40px auto;
-      background-color: #2c2c2c;
+      margin: auto;
+      background-color: #121212;
       padding: 20px;
       border-radius: 20px;
-      box-shadow: 0 0 15px #4fc3f766;
+      box-shadow: 0 0 20px #00d4ff22;
     }
 
     table {
       width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 16px;
+      overflow: hidden;
     }
 
     th, td {
-      border: 1px solid #444;
+      border: 1px solid #333;
       padding: 12px;
       text-align: center;
     }
 
     th {
-      background-color: #333;
-      color: #4fc3f7;
+      background-color: #1a1a1a;
+      color: #00d4ff;
+      font-weight: 600;
     }
 
     td {
-      background-color: #1a1a1a;
+      background-color: #1b1b1b;
+    }
+
+    .glow {
+      background-color: #2c3e50;
+      box-shadow: 0 0 12px #00d4ffcc;
+      border: 1px solid #00d4ff;
     }
 
     .day-off {
-      background-color: #3c3c3c;
+      background-color: #2a2a2a !important;
       color: #888;
       font-style: italic;
     }
 
     input[type="text"], input[type="time"] {
-      background-color: #2c2c2c;
+      background-color: #1a1a1a;
       color: white;
       border: none;
-      padding: 5px;
-      border-radius: 8px;
+      padding: 6px;
+      border-radius: 6px;
       width: 90%;
       text-align: center;
     }
 
     .button-row {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
+      text-align: center;
+      margin-top: 20px;
     }
 
-    button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 12px;
-      background-color: #4fc3f7;
+    .button-row button {
+      background-color: #00d4ff;
       color: #000;
-      cursor: pointer;
       font-weight: bold;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 10px;
+      cursor: pointer;
       transition: 0.3s;
     }
 
-    button:hover {
-      background-color: #32b0df;
+    .button-row button:hover {
+      background-color: #00b0d6;
     }
-  
-.today-presence {
-  background-color: #252525;
-  padding: 20px;
-  margin: 40px auto 10px auto;
-  max-width: 900px;
-  border-radius: 14px;
-  box-shadow: 0 0 12px rgba(79, 195, 247, 0.3);
-  color: #fff;
-}
-
-.today-presence h2 {
-  color: #4fc3f7;
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.today-presence ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  text-align: center;
-}
-
-.today-presence li {
-  padding: 6px 0;
-  font-size: 1.1em;
-}
-</style>
-
+  </style>
 </head>
 <body>
   <h1>📅 Planning des Techniciens</h1>
-  
-  <div class="today-presence">
+
+  <div class="presence-summary">
     <h2>📍 Présents ce Mardi</h2>
-    <ul>
-      <li><strong>MAMY</strong> : 09:00 → 17:00</li><li><strong>HICHEM</strong> : 09:00 → 17:00</li><li><strong>SEBASTIEN</strong> : 09:00 → 17:00</li>
-    </ul>
+    <ul id="todayList"><li>Chargement...</li></ul>
   </div>
-<div class="planning-container">
+
+  <div class="planning-container">
     <table id="planningTable">
       <thead>
         <tr>
           <th>Technicien</th>
-          <th>Lundi</th>
-          <th>Mardi</th>
-          <th>Mercredi</th>
-          <th>Jeudi</th>
-          <th>Vendredi</th>
-          <th>Samedi</th>
-          <th>Dimanche</th>
+          <th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th><th>Samedi</th><th>Dimanche</th>
         </tr>
       </thead>
-      <tbody>
-        <tr><td><input type="text" value="MAMY"></td>
-        <td><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td style="box-shadow: 0 0 10px #4fc3f7aa; border: 1px solid #4fc3f7;"><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td class="day-off"><input type="time" value=""> à <input type="time" value=""></td>
-        <td class="day-off"><input type="time" value=""> à <input type="time" value=""></td></tr>
-
-        <tr><td><input type="text" value="HICHEM"></td>
-        <td><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td style="box-shadow: 0 0 10px #4fc3f7aa; border: 1px solid #4fc3f7;"><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td class="day-off"><input type="time" value=""> à <input type="time" value=""></td>
-        <td class="day-off"><input type="time" value=""> à <input type="time" value=""></td></tr>
-
-        <tr><td><input type="text" value="MEHDI"></td>
-        <td class="day-off"><input type="time" value=""> à <input type="time" value=""></td>
-        <td class="day-off"><input type="time" value=""> à <input type="time" value=""></td>
-        <td><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td><input type="time" value="09:00"> à <input type="time" value="17:00"></td></tr>
-
-        <tr><td><input type="text" value="SEBASTIEN"></td>
-        <td><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td style="box-shadow: 0 0 10px #4fc3f7aa; border: 1px solid #4fc3f7;"><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td><input type="time" value="09:00"> à <input type="time" value="17:00"></td>
-        <td class="day-off"><input type="time" value=""> à <input type="time" value=""></td>
-        <td class="day-off"><input type="time" value=""> à <input type="time" value=""></td></tr>
-      </tbody>
+      <tbody></tbody>
     </table>
+
+    <div class="button-row">
+      <button onclick="addRow()">➕ Ajouter un technicien</button>
+      <button onclick="exportJSON()">💾 Exporter en JSON</button>
+    </div>
   </div>
+
+<script>
+  const todayIndex = 1;
+
+  function addRow(nom = "", horaires = []) {
+    const row = document.createElement("tr");
+    let html = `<td><input type="text" value="${nom}" placeholder="Technicien"></td>`;
+    for (let i = 0; i < 7; i++) {
+      const start = horaires[i]?.[0] || "";
+      const end = horaires[i]?.[1] || "";
+      const isToday = i === todayIndex;
+      const glow = (isToday && start && end) ? "glow" : "";
+      const dayoff = (!start && !end) ? "day-off" : "";
+      html += `<td class="${glow || dayoff}">
+        <input type="time" value="${start}" placeholder="REPOS"> à 
+        <input type="time" value="${end}" placeholder="REPOS">
+      </td>`;
+    }
+    row.innerHTML = html;
+    document.querySelector("#planningTable tbody").appendChild(row);
+    attachListeners();
+    updateTodayPresence();
+  }
+
+  function updateTodayPresence() {
+    const list = document.getElementById("todayList");
+    list.innerHTML = "";
+    let found = false;
+    document.querySelectorAll("#planningTable tbody tr").forEach(row => {
+      const name = row.querySelector("input[type='text']").value;
+      const cell = row.querySelectorAll("td")[todayIndex + 1];
+      const inputs = cell.querySelectorAll("input");
+      if (inputs.length === 2 && inputs[0].value && inputs[1].value) {
+        const start = inputs[0].value;
+        const end = inputs[1].value;
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${name}</strong> : ${start} → ${end}`;
+        list.appendChild(li);
+        cell.classList.add("glow");
+        cell.classList.remove("day-off");
+        found = true;
+      } else {
+        cell.classList.remove("glow");
+        cell.classList.add("day-off");
+      }
+    });
+    if (!found) {
+      list.innerHTML = "<li>Aucun technicien prévu aujourd’hui.</li>";
+    }
+  }
+
+  function exportJSON() {
+    const rows = document.querySelectorAll("#planningTable tbody tr");
+    const data = Array.from(rows).map(row => {
+      const nom = row.querySelector("input[type='text']").value;
+      const horaires = Array.from(row.querySelectorAll("td")).slice(1).map(td => {
+        const inputs = td.querySelectorAll("input");
+        return inputs.length === 2 ? [inputs[0].value, inputs[1].value] : ["", ""];
+      });
+      return { nom, horaires };
+    });
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "planning.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function attachListeners() {
+    document.querySelectorAll("input").forEach(input => {
+      input.removeEventListener("input", updateTodayPresence);
+      input.addEventListener("input", updateTodayPresence);
+    });
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    addRow("MAMY", [["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["",""],["",""]]);
+    addRow("HICHEM", [["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["",""],["",""]]);
+    addRow("MEHDI", [["","",""],["","",""],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"]]);
+    addRow("SEBASTIEN", [["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["",""],["",""]]);
+  });
+</script>
 </body>
 </html>
