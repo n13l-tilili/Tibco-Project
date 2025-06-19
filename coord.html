@@ -90,10 +90,13 @@
 </head>
 <body>
   <h1>🔧 Clôture Expédition PMU bloquée</h1>
-  <p style="text-align:center; font-size: 15px; color: #b0bec5; max-width: 700px; margin: 0 auto 20px;">
-    Ce générateur de mail est exclusivement destiné aux <strong>expéditions de type PMU</strong> qui ne peuvent pas être clôturées normalement dans Ti-Stock,
-    en raison d’un <strong>blocage ou bug empêchant la finalisation manuelle</strong> par le technicien.
-  </p>
+
+<div style="text-align: center; margin-top: -10px; margin-bottom: 30px;">
+  <span style="display: inline-block; background: rgba(0,191,255,0.08); padding: 12px 24px; border-radius: 12px; box-shadow: 0 0 8px rgba(0,191,255,0.4); color: #aee4ff; font-size: 15px;">
+    🔷 Cette page est dédiée à l’envoi d’un message à la coordination PMU (RO/RP) pour forcer la clôture d’une expédition bloquée dans Ti-Stock.
+  </span>
+</div>
+
   <div class="form-section">
     <label for="inter">📌 N° Intervention</label>
     <input type="text" id="inter" placeholder="Ex : E737XXXX" />
@@ -119,24 +122,34 @@
       const bon = document.getElementById('bon').value.trim();
       const sn = document.getElementById('sn').value.trim();
 
+      
       const mail = `
-<div style="font-family: 'Segoe UI', sans-serif; color: white; line-height: 1.2;">
-  Bonjour,
-  Je vous contacte afin de demander la clôture manuelle d’une expédition PMU qui semble actuellement bloquée sur Ti-Stock.
-  🚫 Une ligne rouge apparaît en bas de page, m'empêchant de clôturer l’intervention manuellement.
-  📦 Le colis est déjà prêt à partir avec le livreur TNT. Le bon de transport a bien été créé et collé sur le carton.
-  ✅ Une fois la clôture effectuée de votre côté, tout sera bon de mon côté.
-  <table class="mail-table">
+<div style="background:#111; padding: 30px; border-radius: 16px; box-shadow: 0 0 16px rgba(0,191,255,0.5); max-width:800px; margin:auto; font-family: 'Segoe UI', sans-serif; color: white; line-height: 1.2;">
+  Bonjour,<br><br>
+  Je vous contacte afin de demander la clôture manuelle d’une expédition PMU qui semble actuellement bloquée sur Ti-Stock.<br>
+  🚫 Une ligne rouge apparaît en bas de page, m'empêchant de clôturer l’intervention manuellement.<br>
+  📦 Le colis est déjà prêt à partir avec le livreur TNT. Le bon de transport a bien été créé et collé sur le carton.<br>
+  ✅ Une fois la clôture effectuée de votre côté, tout sera bon de mon côté.<br><br>
+  <table style="width:100%; border-collapse:collapse; margin-top:15px; box-shadow: 0 0 10px rgba(0,191,255,0.3); border-radius: 10px; overflow: hidden;">
     <thead>
-      <tr><th>📌 N° Intervention</th><th>🚚 Bon de Transport</th><th>🔍 N° de Série</th></tr>
+      <tr style="background-color:#1e1e1e; color:#00bfff;">
+        <th style="border:1px solid #333; padding:12px;">📌 N° Intervention</th>
+        <th style="border:1px solid #333; padding:12px;">🚚 Bon de Transport</th>
+        <th style="border:1px solid #333; padding:12px;">🔍 N° de Série</th>
+      </tr>
     </thead>
     <tbody>
-      <tr><td>${inter}</td><td>${bon}</td><td>${sn}</td></tr>
+      <tr>
+        <td style="border:1px solid #333; padding:12px; background-color:#181818; color:white;">${inter}</td>
+        <td style="border:1px solid #333; padding:12px; background-color:#181818; color:white;">${bon}</td>
+        <td style="border:1px solid #333; padding:12px; background-color:#181818; color:white;">${sn}</td>
+      </tr>
     </tbody>
-  </table>
+  </table><br>
   Merci d’avance pour votre aide 😊
 </div>
       `;
+    
       document.getElementById('mail-output').innerHTML = mail;
     }
 
