@@ -5,6 +5,29 @@
   <meta charset="UTF-8" />
   <title>📩 Clôture Expédition PMU</title>
   <style>
+#notif {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  background: #1a1a1a;
+  color: #00bfff;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 0 12px rgba(0,191,255,0.4);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1000;
+}
+#notif.show {
+  opacity: 1;
+}
+
+
+
+
+
 body {
   background-color: #0e0e0e;
   font-family: 'Segoe UI', sans-serif;
@@ -38,19 +61,7 @@ button:hover {
   box-shadow: 0 0 16px #00bfffcc;
 }
 
-#notif {
-  display: none;
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  background: #00bfff;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 12px;
-  font-size: 14px;
-  box-shadow: 0 0 10px #00bfffaa;
-  z-index: 999;
-}
+
 
 
 input, textarea, select {
@@ -90,9 +101,20 @@ button:hover {
   color: #fff;
   box-shadow: 0 0 18px #00bfffaa;
 }
+
+
+.glow-card {
+  background: #1f1f1f;
+  margin: 40px auto;
+  padding: 30px 40px;
+  border-radius: 20px;
+  box-shadow: 0 0 25px rgba(0,191,255,0.3);
+  max-width: 900px;
+}
 </style>
 </head>
-<body>
+<body style="background-color:#121212; color:#fff; font-family:sans-serif; margin:0;">
+<div class="glow-card">
   <h1>🔧 Clôture Expédition PMU bloquée</h1>
 
 <div style="text-align: center; margin-top: -10px; margin-bottom: 30px;">
@@ -162,7 +184,9 @@ button:hover {
       const blob = new Blob([content], { type: 'text/html' });
       const data = [new ClipboardItem({ 'text/html': blob })];
       navigator.clipboard.write(data).then(() => {
-        alert("✂️ Mail copié avec style !");
+    showNotif("✅ Mail copié avec style !");
+      showNotif("✅ Mail copié avec style !");
+        showNotif("✂️ Mail copié avec style !");
       });
     }
 
@@ -175,19 +199,30 @@ button:hover {
       a.download = "mail_cloture_pmu.html";
       a.click();
     }
-  </script>
+  
+function showNotif(message) {
+  const notif = document.getElementById("notif");
+  notif.textContent = message;
+  notif.classList.add("show");
+  setTimeout(() => {
+    notif.classList.remove("show");
+  }, 2000);
+}
 
-<div id="notif" style="display:none; position: fixed; bottom: 20px; right: 20px; background: #263238; color: #4fc3f7;
-padding: 10px 20px; border-radius: 8px; box-shadow: 0 0 10px #4fc3f7; font-size: 14px; z-index: 999;">
-  ✅ Mail copié avec style !
-</div>
+</script>
+
+
 
 <script>
   function showNotif(message) {
-    const notif = document.getElementById("notif");
-    notif.textContent = message;
-    notif.style.display = "block";
-    setTimeout(() => { notif.style.display = "none"; }, 3000);
+  const notif = document.getElementById("notif");
+  notif.textContent = message;
+  notif.style.display = "block";
+  setTimeout(() => {
+    notif.style.display = "none";
+  }, 2500);
+}, 2500);
+}, 3000);
   }
 
   function copyMail() {
@@ -195,6 +230,8 @@ padding: 10px 20px; border-radius: 8px; box-shadow: 0 0 10px #4fc3f7; font-size:
     const blob = new Blob([content], { type: 'text/html' });
     const data = [new ClipboardItem({ 'text/html': blob })];
     navigator.clipboard.write(data).then(() => {
+    showNotif("✅ Mail copié avec style !");
+      showNotif("✅ Mail copié avec style !");
       showNotif("✅ Mail copié avec style !");
     });
   }
@@ -209,7 +246,20 @@ padding: 10px 20px; border-radius: 8px; box-shadow: 0 0 10px #4fc3f7; font-size:
     a.click();
     showNotif("💾 Fichier HTML exporté !");
   }
+
+function showNotif(message) {
+  const notif = document.getElementById("notif");
+  notif.textContent = message;
+  notif.classList.add("show");
+  setTimeout(() => {
+    notif.classList.remove("show");
+  }, 2000);
+}
+
 </script>
+
+<div id="notif">✅ Mail copié avec style !</div>
+</div>
 </body>
 
 </html>
