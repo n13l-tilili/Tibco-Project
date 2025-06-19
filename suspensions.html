@@ -4,69 +4,96 @@
   <meta charset="UTF-8">
   <title>📋 Mail Fin de Journée – Suspensions</title>
   <style>
-    body {
-      background-color: #0e0e0e;
-      font-family: 'Segoe UI', sans-serif;
-      color: white;
-      padding: 40px;
-    }
+body {
+  background-color: #0e0e0e;
+  font-family: 'Segoe UI', sans-serif;
+  color: white;
+  padding: 40px;
+}
 
-    textarea {
-      width: 100%;
-      height: 200px;
-      background: #1f1f1f;
-      color: white;
-      border: 1px solid #00bfff;
-      border-radius: 8px;
-      padding: 10px;
-      font-family: monospace;
-    }
+h1 {
+  text-align: center;
+  color: #00bfff;
+  font-size: 2em;
+  margin-bottom: 30px;
+  text-shadow: 0 0 10px #00bfff88;
+}
 
-    .btn-row {
-      text-align: center;
-      margin-top: 20px;
-    }
+button {
+  background-color: #00bfff;
+  color: white;
+  padding: 12px 24px;
+  font-size: 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 8px;
+  box-shadow: 0 0 10px #00bfff88;
+  transition: 0.3s;
+}
 
-    button {
-      background-color: #00bfff;
-      color: white;
-      padding: 12px 24px;
-      font-size: 15px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      margin: 8px;
-      box-shadow: 0 0 10px #00bfff88;
-      transition: 0.3s;
-    }
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 16px #00bfffcc;
+}
 
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 16px #00bfffcc;
-    }
+#notif {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: #00bfff;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  box-shadow: 0 0 10px #00bfffaa;
+  z-index: 999;
+}
 
-    #notif {
-      display: none;
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background: #00bfff;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 12px;
-      font-size: 14px;
-      box-shadow: 0 0 10px #00bfffaa;
-      z-index: 999;
-    }
 
-    #mail-output {
-      margin-top: 30px;
-    }
-  </style>
+input, textarea, select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  border: 1px solid #00bfff;
+  background-color: #1a1a1a;
+  color: #e0f7fa;
+  font-size: 15px;
+  transition: border 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  border: 1px solid #4fc3f7;
+  outline: none;
+}
+
+button {
+  background-color: #1a1a1a;
+  color: #00bfff;
+  font-weight: bold;
+  border: 1px solid #00bfff;
+  padding: 12px 24px;
+  font-size: 15px;
+  border-radius: 12px;
+  cursor: pointer;
+  margin: 8px;
+  box-shadow: 0 0 12px #00bfff55;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #111;
+  color: #fff;
+  box-shadow: 0 0 18px #00bfffaa;
+}
+</style>
 </head>
 <body>
 
-<h1 style="text-align:center; color:#00bfff;">📋 Mail Fin de Journée – Suspensions PMU</h1>
+<h1>📋 Mail Fin de Journée – Suspensions PMU</h1>
 
 <div style="text-align: center; margin-top: -10px; margin-bottom: 30px;">
   <span style="display: inline-block; background: rgba(0,191,255,0.08); padding: 12px 24px; border-radius: 12px; box-shadow: 0 0 8px rgba(0,191,255,0.4); color: #aee4ff; font-size: 15px;">
