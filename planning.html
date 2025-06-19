@@ -135,7 +135,7 @@
   <h1 class="no-print">📅 Planning des Techniciens <span id="editToggle">✏️</span></h1>
 
   <div class="presence-summary no-print">
-    <h2>📍 Présents ce Mardi</h2>
+    <h2 id="dayLabel">📍 Présents aujourd’hui</h2>
     <ul id="todayList"><li>Chargement...</li></ul>
   </div>
 
@@ -160,7 +160,7 @@
   </div>
 
 <script>
-  const todayIndex = 1;
+  const todayIndex = (new Date().getDay() + 6) % 7;
   let editMode = false;
 
   function toggleEdit() {
@@ -249,6 +249,8 @@ if (isEdit) {
 
   document.getElementById("editToggle").addEventListener("click", toggleEdit);
   window.addEventListener("DOMContentLoaded", () => {
+    const jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+    document.getElementById("dayLabel").textContent = "📍 Présents ce " + jours[todayIndex];
     addRow("MAMY", [["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["",""],["",""]]);
     addRow("HICHEM", [["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["",""],["",""]]);
     addRow("MEHDI", [["","",""],["","",""],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"],["09:00","17:00"]]);
